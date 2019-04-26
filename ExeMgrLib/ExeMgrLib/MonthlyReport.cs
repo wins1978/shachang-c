@@ -41,7 +41,7 @@ namespace ExeMgrLib
             List<EXCEL_IMPORT_DAILY> ddList = GetData(month);
             foreach(EXCEL_IMPORT_DAILY item in ddList)
             {
-                item.GROUP_NAME = item.GROUP_NAME == "石粉" ? "石粉" : item.GROUP_NAME == "头破石" ? "头破石" : "石仔";
+                item.GROUP_NAME = "机制砂";
             }
             var dataSummary = (from a in ddList
                                group a by new { a.TAKE_DEPT, a.GROUP_NAME, a.UNIT_PRICE } into b
@@ -99,7 +99,7 @@ namespace ExeMgrLib
                     mmm.MonthlyModelList.Add(mmTouPoShi);
                 }
 
-                List<MonthlyModel> mmShiZaiList = monlyModels.Where(o => o.Vendor == vendor && o.GroupName == "石仔").ToList();
+                List<MonthlyModel> mmShiZaiList = monlyModels.Where(o => o.Vendor == vendor && o.GroupName == "机制砂").ToList();
                 foreach(MonthlyModel mmShiZai in mmShiZaiList)
                 {
                     mmm.MonthlyModelList.Add(mmShiZai);
@@ -167,7 +167,7 @@ namespace ExeMgrLib
                                 }
                                     
                             }
-                            else if(mm1.GroupName == "石仔")
+                            else if(mm1.GroupName == "机制砂")
                             {
                                 mr.ShiZaiCarCount = mm1.CarCount;
                                 mr.ShiZaiUnitPrice = mm1.UnitPrice;
@@ -268,13 +268,13 @@ namespace ExeMgrLib
                         CreateCellDouble(rr, mrm.TotalPrice, 12);//汇总金额
                         rdx++;
                     }
-                    CreateCellDouble(rr, mr.ShiZaiWeight, 2);//石仔（吨数）
-                    CreateCellDouble(rr, mr.ShiZaiCarCount, 3);//石仔车数
+                    CreateCellDouble(rr, mr.ShiZaiWeight, 2);//机制砂（吨数）
+                    CreateCellDouble(rr, mr.ShiZaiCarCount, 3);//机制砂车数
                     CreateCellDouble(rr, mr.ShiFengWeight, 4);//石粉（吨数）
                     CreateCellDouble(rr, mr.ShiFengCarCount, 5);//石粉车数
                     CreateCellDouble(rr, mr.TouPoShiWeight, 6);//头破石（吨数）
                     CreateCellDouble(rr, mr.TouPoShiCarCount, 7);//头破石车数
-                    CreateCellDouble(rr, mr.ShiZaiUnitPrice, 8);//石仔单价
+                    CreateCellDouble(rr, mr.ShiZaiUnitPrice, 8);//机制砂单价
                     CreateCellDouble(rr, mr.ShiFengUnitPrice, 9);//石粉单价
                     CreateCellDouble(rr, mr.TouPoShiUnitPrice, 10);//头破石单价
                     CreateCellDouble(rr, mr.TotalGroupPrice, 11);//金额
@@ -322,16 +322,16 @@ namespace ExeMgrLib
             IRow row3 = sheet.CreateRow(2);
             CreateMergeCellString("序号", sheet, row2, 1, 2, 0, 0);
             CreateMergeCellString("客户名称", sheet, row2, 1, 2, 1, 1);
-            CreateMergeCellString("石仔（吨数）", sheet, row2, 1, 2, 2, 2);
+            CreateMergeCellString("机制砂（吨数）", sheet, row2, 1, 2, 2, 2);
             CreateMergeCellString("车数", sheet, row2, 1, 2, 3, 3);
-            CreateMergeCellString("石粉（吨数）", sheet, row2, 1, 2, 4, 4);
-            CreateMergeCellString("车数", sheet, row2, 1, 2, 5, 5);
-            CreateMergeCellString("头破石", sheet, row2, 1, 2, 6, 6);
-            CreateMergeCellString("车数", sheet, row2, 1, 2, 7, 7);
+            CreateMergeCellString("", sheet, row2, 1, 2, 4, 4);//石粉（吨数）
+            CreateMergeCellString("", sheet, row2, 1, 2, 5, 5);//车数
+            CreateMergeCellString("", sheet, row2, 1, 2, 6, 6);//头破石
+            CreateMergeCellString("", sheet, row2, 1, 2, 7, 7);//车数
             CreateMergeCellString("单价(吨)", sheet, row2, 1, 1, 8, 10);
-            CreateCellString(row3, "石仔", 8);
-            CreateCellString(row3, "石粉", 9);
-            CreateCellString(row3, "头破石", 10);
+            CreateCellString(row3, "机制砂", 8);
+            CreateCellString(row3, "", 9);//石粉
+            CreateCellString(row3, "", 10);//头破石
             CreateMergeCellString("金额", sheet, row2, 1, 2, 11, 11);
             CreateMergeCellString("汇总金额", sheet, row2, 1, 2, 12, 12);
             CreateMergeCellString("备注", sheet, row2, 1, 2, 13, 13);
@@ -377,9 +377,9 @@ namespace ExeMgrLib
         {
             IRow rr = sheet.CreateRow(rowIndex);
             CreateCellString(rr, mm.Vendor, 1);//客户名称
-            CreateCellDouble(rr, mm.TotalNetWeight, 2);//石仔（吨数）
+            CreateCellDouble(rr, mm.TotalNetWeight, 2);//机制砂（吨数）
             CreateCellDouble(rr, mm.CarCount, 3); //车数
-            CreateCellDouble(rr, mm.UnitPrice, 8); //石仔单价
+            CreateCellDouble(rr, mm.UnitPrice, 8); //机制砂单价
 
             rowIndex++;
         }

@@ -81,29 +81,13 @@ namespace ExeMgrLib
                 dm.UnitPrice = item.UnitPrice;
                 dm.CarNumber = item.CarNumber;
                 dm.NumberFlag = item.NumberFlag;
-                if (item.ShopNumber == "0-5")
-                {
-                    dm.Weight05 = item.TotalNetWeight;
-                }else if(item.ShopNumber == "1-2")
+                if(item.ShopNumber == "成品砂")
                 {
                     dm.Weight12 = item.TotalNetWeight;
                 }
-                else if (item.ShopNumber == "1-3")
+                else if (item.ShopNumber == "其他")
                 {
                     dm.Weight13 = item.TotalNetWeight;
-                }
-                else if (item.ShopNumber == "2-4")
-                {
-                    dm.Weight24 = item.TotalNetWeight;
-                }
-                else if (item.ShopNumber == "头破石")
-                {
-                    dm.WeightTouposhi = item.TotalNetWeight;
-                }
-                else if (item.ShopNumber == "石粉")
-                {
-                    dm.WeightShifeng = item.TotalNetWeight;
-                    
                 }
                 lines.Add(dm);
             }
@@ -131,13 +115,13 @@ namespace ExeMgrLib
             CreateMergeCellString("车牌", sheet, r2, 1, 2, 3, 3);
             CreateMergeCellString("磅单号", sheet, r2, 1, 2, 4, 4);
             CreateMergeCellString("单据编号", sheet, r2, 1, 2, 5, 5);
-            CreateMergeCellString("石料型号", sheet, r2, 1, 1, 6, 11);
-            CreateCellString(r3, "0-5", 6);
-            CreateCellString(r3, "1-2", 7);
-            CreateCellString(r3, "1-3", 8);
-            CreateCellString(r3, "2-4", 9);
-            CreateCellString(r3, "头破石", 10);
-            CreateCellString(r3, "石粉", 11);
+            CreateMergeCellString("沙子型号", sheet, r2, 1, 1, 6, 11);
+            CreateCellString(r3, "", 6);// 0-5
+            CreateCellString(r3, "成品砂", 7);
+            CreateCellString(r3, "其他", 8);
+            CreateCellString(r3, "", 9);//2-4
+            CreateCellString(r3, "", 10);//头破石
+            CreateCellString(r3, "", 11);//石粉
             CreateMergeCellString("单价", sheet, r2, 1, 2, 12, 12);
             CreateMergeCellString("车数", sheet, r2, 1, 2, 13, 13);
             CreateMergeCellString("金额", sheet, r2, 1, 2, 14, 14);

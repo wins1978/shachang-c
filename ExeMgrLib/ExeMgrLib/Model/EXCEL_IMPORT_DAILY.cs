@@ -412,7 +412,7 @@ namespace ExcelPro
             }
         }
         /// <summary>
-        /// 石粉、石仔
+        /// 机制砂
         /// </summary>
         [Column(Storage = "_GROUP_NAME", IsPrimaryKey = false, CanBeNull = true)]
         [DataMember(IsRequired = true)]

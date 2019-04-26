@@ -75,7 +75,7 @@ namespace ExeMgrLib.Model
         public string SendOutDept { get; set; }
 
         /// <summary>
-        /// 石粉、石仔
+        /// 机制砂
         /// </summary>
         public string GroupName { get; set; }
 

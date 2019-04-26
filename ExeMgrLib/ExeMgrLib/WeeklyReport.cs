@@ -62,10 +62,10 @@ namespace ExeMgrLib
             IRow row2 = sheet.CreateRow(2);
             IRow row3 = sheet.CreateRow(3);
             CreateMergeCellString("日期", sheet, row2, 2, 3, 0, 0);
-            CreateCellString(row2, "石仔", 1);
+            CreateCellString(row2, "机制砂", 1);
             CreateCellString(row3, "吨数", 1);
-            CreateCellString(row2, "石粉", 2);
-            CreateCellString(row3, "吨数", 2);
+            CreateCellString(row2, "", 2);//石粉
+            CreateCellString(row3, "", 2);//吨数
             CreateMergeCellString("现金", sheet, row2, 2, 3, 3, 3);
             CreateMergeCellString("欠账", sheet, row2, 2, 3, 4, 4);
             CreateMergeCellString("总收入", sheet, row2, 2, 3, 5, 5);
@@ -221,7 +221,7 @@ namespace ExeMgrLib
             List<EXCEL_DAILY_DETAIL> ddList = new List<EXCEL_DAILY_DETAIL>();
             using (var db = new OracleDataAccess())
             {
-                ddList = db.GetItems<EXCEL_DAILY_DETAIL>(o => o.GROUP_NAME == "石仔" && o.DATE_STR== dateStr);
+                ddList = db.GetItems<EXCEL_DAILY_DETAIL>(o => o.GROUP_NAME == "机制砂" && o.DATE_STR== dateStr);
             }
 
             return ddList;
@@ -268,10 +268,10 @@ namespace ExeMgrLib
             IRow row2 = sheet.CreateRow(2);
             IRow row3 = sheet.CreateRow(3);
             CreateMergeCellString("客户名称", sheet, row2, 2, 3, 0, 0);
-            CreateMergeCellString("石料重量（单位：吨", sheet, row2, 2, 2, 1, goodsListCount);
+            CreateMergeCellString("沙子重量（单位：吨", sheet, row2, 2, 2, 1, goodsListCount);
             CreateMergeCellString("单价（吨/元）", sheet, row2, 2, 2, goodsListCount + 1, goodsListCount + 2);
-            CreateCellString(row3, "石仔", goodsListCount + 1);
-            CreateCellString(row3, "石粉", goodsListCount + 2);
+            CreateCellString(row3, "机制砂", goodsListCount + 1);
+            CreateCellString(row3, "", goodsListCount + 2);//石粉
             CreateMergeCellString("本周金额", sheet, row2, 2, 3, goodsListCount + 3, goodsListCount + 3);
             CreateMergeCellString("本月累计金额", sheet, row2, 2, 3, goodsListCount + 4, goodsListCount + 4);
             CreateMergeCellString("备注", sheet, row2, 2, 3, goodsListCount + 5, goodsListCount + 5);
@@ -285,7 +285,7 @@ namespace ExeMgrLib
                 gIndex++;
             }
 
-            List<EXCEL_DAILY_WEEKREPORT_V> shizaiList = GetWeeklyDetails(firstDay,lastDay, "石仔");
+            List<EXCEL_DAILY_WEEKREPORT_V> shizaiList = GetWeeklyDetails(firstDay,lastDay, "机制砂");
             var shizaiGroup = shizaiList;
             var shizaiPriceGroup = (from a in shizaiList
                                     group a by new { a.VENDOR, a.UNIT_PRICE } into b

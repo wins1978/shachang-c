@@ -171,7 +171,7 @@ namespace ExeMgrLib
                                {
                                    TAKE_DEPT = b.Key.TAKE_DEPT,
                                    SHOP_NUMBER = b.Key.SHOP_NUMBER,
-                                   GROUP_NAME = b.Key.SHOP_NUMBER == "石粉" ? "石粉" : "石仔",
+                                   GROUP_NAME = "机制砂",
                                    CAR_NUMBER = b.Key.CAR_NUMBER,
                                    CarCount = b.Count(),
                                    UNIT_PRICE = Math.Round(b.Average(c => c.UNIT_PRICE.Value), 2),
@@ -235,7 +235,7 @@ namespace ExeMgrLib
                                {
                                    TAKE_DEPT = b.Key.TAKE_DEPT,
                                    SHOP_NUMBER = b.Key.SHOP_NUMBER,
-                                   GROUP_NAME = b.Key.SHOP_NUMBER == "石粉" ? "石粉" :  "石仔",
+                                   GROUP_NAME = "机制砂",
                                    CAR_NUMBER = "",
                                    CarCount = b.Count(),
                                    UNIT_PRICE = Math.Round(b.Average(c => c.UNIT_PRICE.Value), 2),

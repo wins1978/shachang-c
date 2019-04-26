@@ -106,7 +106,7 @@ namespace ExcelPro
             }
         }
         /// <summary>
-        /// 石仔；石粉
+        /// 机制砂
         /// </summary>
         [Column(Storage = "_GOODS_TYPE", IsPrimaryKey = false, CanBeNull = true)]
         [DataMember(IsRequired = true)]

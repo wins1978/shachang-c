@@ -124,14 +124,7 @@ namespace ExeMgrLib
             DateTime today = DateTime.Parse(date2);
             foreach (var item in items)
             {
-                if (item.ShopNumber == "石粉")
-                {
-                    item.GroupName = "石粉";
-                }
-                else
-                {
-                    item.GroupName = "石仔";
-                }
+                item.GroupName = "机制砂";
             }
 
             //删除临时数据
@@ -249,7 +242,7 @@ namespace ExeMgrLib
             double totalprice = 0;
             double curPrice = 0;//现金
             double shiFeng = 0;//石粉（吨）
-            double shiZai = 0;//石仔
+            double shiZai = 0;//机制砂
             ICellStyle cs2 = sheet1.GetRow(8).GetCell(1).CellStyle;
             foreach (var item in dataDetails)
             {
@@ -276,14 +269,11 @@ namespace ExeMgrLib
                 sheet1.GetRow(rowIndex).GetCell(5).CellStyle = cs2;
 
                 //石粉吨
-                if (item.GroupName == "石粉")
-                {
-                    shiFeng += cell2;
-                }
-                else
-                {
-                    shiZai += cell2;
-                }
+                //if (item.GroupName == "石粉")
+                //{
+                //    shiFeng += cell2;
+                //}
+                shiZai += cell2;
 
                 double price = (double)item.PRICE;
                 sheet1.GetRow(rowIndex).GetCell(3).SetCellValue(price);
@@ -326,7 +316,7 @@ namespace ExeMgrLib
             sheet1.GetRow(2).GetCell(1).SetCellValue(curPrice);
             //挂账
             sheet1.GetRow(3).GetCell(1).SetCellValue(totalprice-curPrice);
-            //石仔
+            //机制砂
             sheet1.GetRow(4).GetCell(1).SetCellValue(shiZai);
             //石粉
             sheet1.GetRow(5).GetCell(1).SetCellValue(shiFeng);
@@ -344,8 +334,8 @@ namespace ExeMgrLib
 
 
             type05car = dataSummary.Where(o => o.ShopNumber == "0-5").Sum(o=>o.Count);
-            type12car = dataSummary.Where(o => o.ShopNumber == "1-2").Sum(o => o.Count);
-            type13car = dataSummary.Where(o => o.ShopNumber == "1-3").Sum(o => o.Count);
+            type12car = dataSummary.Where(o => o.ShopNumber == "成品砂").Sum(o => o.Count);
+            type13car = dataSummary.Where(o => o.ShopNumber == "其他").Sum(o => o.Count);
             type24car = dataSummary.Where(o => o.ShopNumber == "2-4").Sum(o => o.Count);
             typeshiPotouCar = dataSummary.Where(o => o.ShopNumber == "头破石").Sum(o => o.Count);
             sheet1.GetRow(2).GetCell(3).SetCellValue(type05car);
@@ -355,8 +345,8 @@ namespace ExeMgrLib
             sheet1.GetRow(6).GetCell(3).SetCellValue(typeshiPotouCar);
 
             type05w = dataSummary.Where(o => o.ShopNumber == "0-5").Sum(o => o.TotalNetWeight);
-            type12w = dataSummary.Where(o => o.ShopNumber == "1-2").Sum(o => o.TotalNetWeight);
-            type13w = dataSummary.Where(o => o.ShopNumber == "1-3").Sum(o => o.TotalNetWeight);
+            type12w = dataSummary.Where(o => o.ShopNumber == "成品砂").Sum(o => o.TotalNetWeight);
+            type13w = dataSummary.Where(o => o.ShopNumber == "其他").Sum(o => o.TotalNetWeight);
             type24w = dataSummary.Where(o => o.ShopNumber == "2-4").Sum(o => o.TotalNetWeight);
             typeshiPotouCarW = dataSummary.Where(o => o.ShopNumber == "头破石").Sum(o => o.TotalNetWeight);
 
@@ -423,7 +413,7 @@ namespace ExeMgrLib
                 dd.DATE_STR = datestr;
                 dd.FILE_NAME = filename;
                 dd.GOODS_NAME = it.ShopNumber;
-                dd.GROUP_NAME = it.ShopNumber == "石粉" ? "石粉" : "石仔";
+                dd.GROUP_NAME = "机制砂";
                 dd.GUID_KEY = guid;
                 dd.REPORT_DATE = today;
                 dd.UNIT_PRICE = it.UNIT_PRICE;

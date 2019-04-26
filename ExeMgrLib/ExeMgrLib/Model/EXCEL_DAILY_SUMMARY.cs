@@ -212,7 +212,7 @@ namespace ExcelPro
             }
         }
         /// <summary>
-        /// 石仔吨数
+        /// 机制砂吨数
         /// </summary>
         [Column(Storage = "_SHIZAI_W", IsPrimaryKey = false, CanBeNull = true)]
         [DataMember(IsRequired = true)]

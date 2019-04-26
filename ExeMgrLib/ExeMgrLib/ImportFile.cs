@@ -333,7 +333,7 @@ namespace ExeMgrLib
                 case "货物名称":
                     CheckEmptyError(index, colName, col, cell);
                     item.ShopNumber = cell;
-                    item.GroupName = item.ShopNumber == "石粉" ? "石粉" : "石仔";
+                    item.GroupName = "机制砂";
                     break;
                 case "毛重":
                     CheckIntError(index, colName, col, cell);

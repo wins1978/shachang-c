@@ -204,53 +204,53 @@
                         @if (@ViewBag.ActionName == "DailyReport")
                         {
                         <li class="active">
-                            @Html.ActionLink("微信日报", "Index", new { type = "DailyReport" })
+                            @Html.ActionLink("沙子微信日报", "Index", new { type = "DailyReport" })
                         </li>
                         }
                         else
                         {
                         <li>
-                            @Html.ActionLink("微信日报", "Index", new { type = "DailyReport" })
+                            @Html.ActionLink("沙子微信日报", "Index", new { type = "DailyReport" })
                         </li>
                         }
                         @if (@ViewBag.ActionName == "CustomDailyReport")
                         {
                             <li class="active">
-                                @Html.ActionLink("客户日报", "Index", new { type = "CustomDailyReport" })
+                                @Html.ActionLink("沙子客户日报", "Index", new { type = "CustomDailyReport" })
                             </li>
                         }
                         else
                         {
                             <li>
-                                @Html.ActionLink("客户日报", "Index", new { type = "CustomDailyReport" })
+                                @Html.ActionLink("沙子客户日报", "Index", new { type = "CustomDailyReport" })
                             </li>
                         }
                         @if (@ViewBag.ActionName == "WeeklyReport")
                         {
                         <li class="active">
-                            @Html.ActionLink("周报表", "Index", new { type = "WeeklyReport" })
+                            @Html.ActionLink("沙子周报表", "Index", new { type = "WeeklyReport" })
                         </li>
                         }
                         else
                         {
                         <li>
-                            @Html.ActionLink("周报表", "Index", new { type = "WeeklyReport" })
+                            @Html.ActionLink("沙子周报表", "Index", new { type = "WeeklyReport" })
                         </li>
                         }
                         @if (@ViewBag.ActionName == "MonthlyReport")
                         {
                             <li class="active">
-                                @Html.ActionLink("月出库核算表", "Index", new { type = "MonthlyReport" })
+                                @Html.ActionLink("沙子月出库核算表", "Index", new { type = "MonthlyReport" })
                             </li>
                         }
                         else
                         {
                             <li>
-                                @Html.ActionLink("月出库核算表", "Index", new { type = "MonthlyReport" })
+                                @Html.ActionLink("沙子月出库核算表", "Index", new { type = "MonthlyReport" })
                             </li>
                         }
                         <li>
-                            @Html.ActionLink("自定义报表", "Index", "CustomReport")
+                            @Html.ActionLink("沙子自定义报表", "Index", "CustomReport")
                         </li>
                     </ul>
                 </div><!--/.well -->
@@ -269,18 +269,18 @@
                     }
                     else if (@ViewBag.ActionName == "MonthlyReport")
                     {
-                        <h1>月报下载</h1>
+                        <h1>沙子月报下载</h1>
                         <button id="btn_monthly" type="button" class="btn btn-primary btn-lg">
                             <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>生成月出库核算表
                         </button>
                     }
                     else if (@ViewBag.ActionName == "DailyReport")
                     {
-                        <h1>微信日报下载</h1>
+                        <h1>沙子微信日报下载</h1>
                     }
                     else if (@ViewBag.ActionName == "CustomDailyReport")
                     {
-                        <h1>客户日报下载</h1>
+                        <h1>沙子客户日报下载</h1>
                     }
                     <table id="tb_dept" class="table table-hover">
                         <thead>

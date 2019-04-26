@@ -82,18 +82,18 @@ namespace ExeMgrLib
             IRow rr = sheet.CreateRow(1);
             CreateCellString(rr, "序号", 0);
             CreateCellString(rr, "客户名称", 1);
-            CreateCellString(rr, "0—5", 2);
-            CreateCellString(rr, "车数", 3);
-            CreateCellString(rr, "1—2", 4);
+            CreateCellString(rr, "", 2);//0—5
+            CreateCellString(rr, "", 3);//车数
+            CreateCellString(rr, "成品砂", 4);
             CreateCellString(rr, "车数", 5);
-            CreateCellString(rr, "1—3", 6);
+            CreateCellString(rr, "其他", 6);
             CreateCellString(rr, "车数", 7);
-            CreateCellString(rr, "2—4", 8);
-            CreateCellString(rr, "车数", 9);
-            CreateCellString(rr, "石粉", 10);
-            CreateCellString(rr, "车数", 11);
-            CreateCellString(rr, "头破石", 12);
-            CreateCellString(rr, "车数", 13);
+            CreateCellString(rr, "", 8);//2—4
+            CreateCellString(rr, "", 9);//车数
+            CreateCellString(rr, "", 10);//石粉
+            CreateCellString(rr, "", 11);//车数
+            CreateCellString(rr, "", 12);//头破石
+            CreateCellString(rr, "", 13);//车数
             CreateCellString(rr, "备注", 14);
 
             return title;
@@ -266,12 +266,12 @@ namespace ExeMgrLib
                         cdm.Weight05 += double.Parse(ii.NET_WEIGHT);
                         cdm.CarCount05 += 1;
                     }
-                    else if(ii.SHOP_NUMBER == "1-2")
+                    else if(ii.SHOP_NUMBER == "成品砂")
                     {
                         cdm.Weight12 += double.Parse(ii.NET_WEIGHT);
                         cdm.CarCount12 += 1;
                     }
-                    else if (ii.SHOP_NUMBER == "1-3")
+                    else if (ii.SHOP_NUMBER == "其他")
                     {
                         cdm.Weight13 += double.Parse(ii.NET_WEIGHT);
                         cdm.CarCount13 += 1;

@@ -1,0 +1,227 @@
+﻿
+@{
+    ViewBag.Title = "Home Page";
+}
+
+   <script src="~/Scripts/Home/index.js"></script>
+<!--<script src="~/Scripts/bootstrap3-editable/js/bootstrap-editable.js"></script>-->
+    <!--https://www.cnblogs.com/landeanfen/p/5821192.html-->
+
+<div class="container body-content">
+    <div class="panel panel-default">
+        <div class="panel-heading">导入</div>
+        <div class="panel-body">
+            <button id="btn_import" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-import" aria-hidden="true">导入</span>
+            </button>
+            <button id="btn_report" type="button" class="btn btn-default">
+                <span class="glyphicon glyphicon-import" aria-hidden="true">生成报表</span>
+            </button>
+        </div>
+        <div class="panel-body">
+            <div id="errorBlock" style="color:#a94442;background-color:#f2dede;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px; display:none;">
+                <strong>提示：</strong>
+                <span id="errorSpan"></span>
+            </div>
+            <table class="table" id="tbInput" style="display:none;">
+                <caption>磅单数</caption>
+                <thead>
+                    <tr>
+                        <th>行号</th>
+                        <th>首次称重操作员</th>
+                        <th>磅单编号</th>
+                        <th>称重日期</th>
+                        <th>毛重时间</th>
+                        <th>车号</th>
+                        <th>货物名称</th>
+                        <th>毛重</th>
+                        <th>皮重</th>
+                        <th>净重</th>
+                        <th>供应商净重</th>
+                        <th>收货单位</th>
+                        <th>发货单位</th>
+                        <th>单价</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyInput"></tbody>
+            </table>
+        </div>
+    </div>
+    <form>
+        <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">请选择Excel文件</h4>
+                    </div>
+                    <div class="modal-body">
+                        <input type="file" name="txt_file" id="txt_file" multiple class="file-loading" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </form>
+    </div>
+
+<script type="text/javascript">
+
+    $(function () {
+
+        //1.初始化input控件
+        var oFileInput = new FileInput();
+        oFileInput.Init("txt_file", url_p + "/Home/Update");
+
+        //2.注册导入按钮的事件
+        $("#btn_import").click(function () {
+            $("#myModal").modal();
+        });
+
+        $("#btn_report").click(function () {
+            var data = JSON.stringify(getAllData());
+            var token = $('[name=__RequestVerificationToken]').val();
+            $.ajax({
+                url: url_p + '/Home/SaveData',
+                type: 'POST',
+                dataType: 'json',
+                contentType: 'application/json; charset=utf-8',
+                data: JSON.stringify({ 'getepassdata': data }),
+                success: function (data, status) {
+                    alert(data);
+                },
+                error: function (data, status) {
+                    alert(data);
+                }
+            });
+        });
+    });
+
+    function getAllData() {
+        var data = [];
+        $('#tbodyInput tr').each(function () {
+            var DriverName = $(this).find('#DriverName').html();
+            var NumberFlag = $(this).find('#NumberFlag').html();
+            var Date = $(this).find('#Date').html();
+            var Time = $(this).find('#Time').html();
+            var CarNumber = $(this).find('#CarNumber').html();
+            var ShopNumber = $(this).find('#ShopNumber').html();
+            var GrossWeight = $(this).find('#GrossWeight').html();
+            var TareWeight = $(this).find('#TareWeight').html();
+            var NetWeight = $(this).find('#NetWeight').html();
+            var VendorNetWeight = $(this).find('#VendorNetWeight').val();
+            var TakeDept = $(this).find('#TakeDept').html();
+            var SendOutDept = $(this).find('#SendOutDept').html();
+            var UnitPrice = $(this).find('#UnitPrice').val();
+            var alldata = {
+                'DriverName': DriverName,
+                'NumberFlag': NumberFlag,
+                'Date': Date,
+                'Time': Time,
+                'CarNumber': CarNumber,
+                'ShopNumber': ShopNumber,
+                'GrossWeight': GrossWeight,
+                'TareWeight': TareWeight,
+                'NetWeight': NetWeight,
+                'VendorNetWeight': VendorNetWeight,
+                'TakeDept': TakeDept,
+                'SendOutDept': SendOutDept,
+                'UnitPrice': UnitPrice
+            }
+            data.push(alldata);
+        });
+        console.log(data);
+        return data;
+    }
+
+    //初始化fileinput
+    var FileInput = function () {
+        var oFile = new Object();
+
+        //初始化fileinput控件（第一次初始化）
+        oFile.Init = function (ctrlName, uploadUrl) {
+            var control = $('#' + ctrlName);
+            //初始化上传控件的样式
+            control.fileinput({
+                language: 'zh', //设置语言
+                uploadUrl: uploadUrl, //上传的地址
+                allowedFileExtensions: ['xls', 'xlsx', 'csv'],//接收的文件后缀
+                showUpload: true, //是否显示上传按钮
+                showCaption: false,//是否显示标题
+                browseClass: "btn btn-primary", //按钮样式     
+                //dropZoneEnabled: false,//是否显示拖拽区域
+                //minImageWidth: 50, //图片的最小宽度
+                //minImageHeight: 50,//图片的最小高度
+                //maxImageWidth: 1000,//图片的最大宽度
+                //maxImageHeight: 1000,//图片的最大高度
+                //maxFileSize: 0,//单位为kb，如果为0表示不限制文件大小
+                //minFileCount: 0,
+                maxFileCount: 1,
+                enctype: 'multipart/form-data',
+                validateInitialCount: true,
+                previewFileIcon: "<i class='glyphicon glyphicon-king'></i>",
+
+                msgFilesTooMany: "选择上传的文件数量({n}) 超过允许的最大数值{m}！",
+            });
+
+            //导入文件上传完成之后的事件
+            $("#txt_file").on("fileuploaded", function (event, data, previewId, index) {
+                $("#myModal").modal("hide");
+                $("#errorBlock").hide();
+                var errMsg = data.response.ErrMessage;
+                var data = data.response.InputInfoList;
+                if (data == undefined) {
+                    //toastr.error('文件格式类型不正确');
+                    return;
+                }
+                if (errMsg != "") {
+                    $("#errorBlock").show();
+                    $("#errorSpan").html(errMsg);
+                }
+                //1.初始化表格
+                //var oTable = new TableInit();
+                //oTable.Init(data);
+                $("#tbInput").show();
+                var html = "";
+                var index = 1;
+                $.each(data, function () {
+                    if (this.UnitPrice == "" || this.UnitPrice == "0") {
+                        html += "<tr style='background-color:rgb(242, 222, 222)'>";
+                    } else {
+                        html += "<tr>";
+                    }
+
+                    html += "<td><span>" + this.RowIndex + "</span></td>";
+                    html += "<td><span id='DriverName'>" + this.DriverName + "</span></td>";
+                    html += "<td><span id='NumberFlag'>" + this.NumberFlag + "</span></td>";
+                    html += "<td><span id='Date'>" + this.Date + "</span></td>";
+                    html += "<td><span id='Time'>" + this.Time + "</span></td>";
+                    html += "<td><span id='CarNumber'>" + this.CarNumber + "</span></td>";
+                    html += "<td><span id='ShopNumber'>" + this.ShopNumber + "</span></td>";
+                    html += "<td><span id='GrossWeight'>" + this.GrossWeight + "</span></td>";
+                    html += "<td><span id='TareWeight'>" + this.TareWeight + "</span></td>";
+                    html += "<td><span id='NetWeight'>" + this.NetWeight + "</span></td>";
+                    html += "<td>" + "<input class='form-control text-box single-line' style='width:70px;' id='VendorNetWeight' name='item.From' type='text' value='' />" + "</td> ";
+                    //html += "<td><a href=\"#\" id=\"VendorNetWeight" + index +"\" data-type=\"text\">" + this.VendorNetWeight+"</a></td>";
+                    html += "<td><span id='TakeDept'>" + this.TakeDept + "</span></td>";
+                    html += "<td><span id='SendOutDept'>" + this.SendOutDept + "</span></td>";
+                    html += "<td>" + "<input class='form-control text-box single-line' style='width:70px;' id='UnitPrice' name='UnitPrice' type='text' value='" + this.UnitPrice+"' />" + "</td> ";
+                    //html += "<td><span id='UnitPrice'>" + this.UnitPrice + "</span></td>";
+                    html += "</tr>";
+                    index++;
+                });
+
+                $("#tbodyInput").html(html);
+                //$.each(data, function () {
+                //    $('#VendorNetWeight'+index).editable();
+                //    index++;
+                //});
+
+            });
+        }
+        return oFile;
+    };
+
+
+
+
+</script>
