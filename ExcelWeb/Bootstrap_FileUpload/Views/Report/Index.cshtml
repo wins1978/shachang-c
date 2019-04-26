@@ -1,0 +1,484 @@
+﻿
+
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-v2.css">
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-datetimepicker.min.css">
+<script src="~/js/datetime/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/js/datetime/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<!--http://www.runoob.com/try/demo_source/bootstrap-fluid-layout.htm-->
+<style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .nav li {
+        padding-top: 5px;
+    }
+
+    .sidebar-nav {
+        padding: 9px 0;
+    }
+
+    .leaderboard {
+        padding: 60px;
+        margin-bottom: 30px;
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+        .leaderboard h1 {
+            font-size: 40px;
+            margin-bottom: 5px;
+            line-height: 1;
+            letter-spacing: -1px;
+            color: #92B901;
+        }
+
+        .leaderboard p {
+            font-size: 18px;
+            font-weight: 200;
+            line-height: 27px;
+        }
+
+    .well {
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+    .nav .nav-header {
+        font-size: 18px;
+        color: #92B901;
+    }
+
+    .fade {
+        opacity: 0;
+        -webkit-transition: opacity .15s linear;
+        -o-transition: opacity .15s linear;
+        transition: opacity .15s linear;
+    }
+
+        .fade.in {
+            opacity: 1;
+        }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+        .modal.fade .modal-dialog {
+            -webkit-transition: -webkit-transform .3s ease-out;
+            -o-transition: -o-transform .3s ease-out;
+            transition: transform .3s ease-out;
+            -webkit-transform: translate(0, -25%);
+            -ms-transform: translate(0, -25%);
+            -o-transform: translate(0, -25%);
+            transform: translate(0, -25%);
+        }
+
+        .modal.in .modal-dialog {
+            -webkit-transform: translate(0, 0);
+            -ms-transform: translate(0, 0);
+            -o-transform: translate(0, 0);
+            transform: translate(0, 0);
+        }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 10px;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #999;
+        border: 1px solid rgba(0, 0, 0, .2);
+        border-radius: 6px;
+        outline: 0;
+        -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1040;
+        background-color: #000;
+    }
+
+        .modal-backdrop.fade {
+            filter: alpha(opacity=0);
+            opacity: 0;
+        }
+
+        .modal-backdrop.in {
+            filter: alpha(opacity=50);
+            opacity: .5;
+        }
+
+    .modal-header {
+        min-height: 16.42857143px;
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+        .modal-header .close {
+            margin-top: -2px;
+        }
+
+    .modal-title {
+        margin: 0;
+        line-height: 1.42857143;
+    }
+
+    .modal-body {
+        position: relative;
+        padding: 15px;
+    }
+
+    .modal-footer {
+        padding: 15px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+
+        .modal-footer .btn + .btn {
+            margin-bottom: 0;
+            margin-left: 5px;
+        }
+
+        .modal-footer .btn-group .btn + .btn {
+            margin-left: -1px;
+        }
+
+        .modal-footer .btn-block + .btn-block {
+            margin-left: 0;
+        }
+
+    .modal-scrollbar-measure {
+        position: absolute;
+        top: -9999px;
+        width: 50px;
+        height: 50px;
+        overflow: scroll;
+    }
+    .col-center-block {
+        float: none;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    } 
+</style>
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!-- Le fav and touch icons -->
+<div style="width:1140px;" class="col-center-block">
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="well sidebar-nav">
+                    <ul class="nav nav-list" id="list-unstyled">
+                        <li class="nav-header">报表下载</li>
+                        @if (@ViewBag.ActionName == "DailyReport")
+                        {
+                        <li class="active">
+                            @Html.ActionLink("微信日报", "Index", new { type = "DailyReport" })
+                        </li>
+                        }
+                        else
+                        {
+                        <li>
+                            @Html.ActionLink("微信日报", "Index", new { type = "DailyReport" })
+                        </li>
+                        }
+                        @if (@ViewBag.ActionName == "CustomDailyReport")
+                        {
+                            <li class="active">
+                                @Html.ActionLink("客户日报", "Index", new { type = "CustomDailyReport" })
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                @Html.ActionLink("客户日报", "Index", new { type = "CustomDailyReport" })
+                            </li>
+                        }
+                        @if (@ViewBag.ActionName == "WeeklyReport")
+                        {
+                        <li class="active">
+                            @Html.ActionLink("周报表", "Index", new { type = "WeeklyReport" })
+                        </li>
+                        }
+                        else
+                        {
+                        <li>
+                            @Html.ActionLink("周报表", "Index", new { type = "WeeklyReport" })
+                        </li>
+                        }
+                        @if (@ViewBag.ActionName == "MonthlyReport")
+                        {
+                            <li class="active">
+                                @Html.ActionLink("月出库核算表", "Index", new { type = "MonthlyReport" })
+                            </li>
+                        }
+                        else
+                        {
+                            <li>
+                                @Html.ActionLink("月出库核算表", "Index", new { type = "MonthlyReport" })
+                            </li>
+                        }
+                        <li>
+                            @Html.ActionLink("自定义报表", "Index", "CustomReport")
+                        </li>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
+            <div class="span10">
+                <div>
+
+
+                    @if (@ViewBag.ActionName == "WeeklyReport")
+                    {
+                        <h1>周报下载</h1>
+                        <button id="btn_add" type="button" class="btn btn-primary btn-lg">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>生成周报表
+                        </button>
+
+                    }
+                    else if (@ViewBag.ActionName == "MonthlyReport")
+                    {
+                        <h1>月报下载</h1>
+                        <button id="btn_monthly" type="button" class="btn btn-primary btn-lg">
+                            <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>生成月出库核算表
+                        </button>
+                    }
+                    else if (@ViewBag.ActionName == "DailyReport")
+                    {
+                        <h1>微信日报下载</h1>
+                    }
+                    else if (@ViewBag.ActionName == "CustomDailyReport")
+                    {
+                        <h1>客户日报下载</h1>
+                    }
+                    <table id="tb_dept" class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th style="width:100px;">日期</th>
+                                <th style="width:400px;">文件名称</th>
+                                <th style="width:300px;">下载</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var item in ViewBag.Model)
+                            {
+                            <tr>
+                                <td>@item.ReportDate</td>
+                                <td>@item.FileName</td>
+                                <td><a href="@item.FileFullPath">@item.FileName</a></td>
+                            </tr>
+                            }
+
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div><!--/.fluid-container-->
+
+</div>
+    <div class="container body-content">
+        <div class="modal fade" style="height:420px" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog" style="height:390px" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myModalLabel">选择时间(不选默认是上周)</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="control-group">
+                                <label class="control-label">开始日期</label>
+                                <div id="weekdate" class="controls input-append date form_date" style="height:30px" data-date="" data-date-format="yyyy-mm-dd" data-link-field="start_date" data-link-format="yyyy-mm-dd">
+                                    <input size="24" style="height:26px" type="text" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="start_date" value="" /><br />
+                            </div>
+                        </div>
+
+
+                        <div class="form-group">
+                            <div class="control-group">
+                                <label class="control-label">结束日期</label>
+                                <div id="weekdate2" class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="end_date" data-link-format="yyyy-mm-dd">
+                                    <input size="16" type="text" style="height:26px" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="end_date" value="" /><br />
+                            </div>
+
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn_close" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                        <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>创建周报</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <div class="modal fade" style="height:420px" id="myMonthlyModal" tabindex="-1" role="dialog" aria-labelledby="myMonthModalLabel">
+            <div class="modal-dialog" style="height:390px" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <h4 class="modal-title" id="myMonthModalLabel">选择报表月份</h4>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <div class="control-group">
+                                <label class="control-label">选择月份</label>
+                                <div id="monthdate" class="controls input-append date form_date" style="height:30px" data-date="" data-date-format="yyyy-mm-dd" data-link-field="month_date" data-link-format="yyyy-mm-dd">
+                                    <input size="24" style="height:26px" type="text" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="month_date" value="" /><br />
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" id="btn_month_close" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                        <button type="button" id="btn_month_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>创建月报</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+
+    <script type="text/javascript">
+        $('#btn_add').on("click", function () {
+            $("#myModal").modal().on("shown.bs.modal", function () {
+
+            });
+        });
+
+        $('#btn_monthly').on("click", function () {
+            $("#myMonthlyModal").modal().on("shown.bs.modal", function () {
+
+            });
+        });
+
+
+        $('#btn_month_submit').on("click", function () {
+            var month = $("#month_date").val();
+            if (month == null || month == "") {
+                alert("请选择月份");
+                return;
+            }
+
+            var oEmptyModel = {
+                startMonth: month
+            };
+
+
+            $.ajax({
+                url: url_p + "/Report/CreateMonthlyReport",
+                type: "post",
+                data: oEmptyModel,
+                success: function (data, status) {
+                    alert(data);
+                    location = location;
+                }
+            });
+        });
+
+        $('#btn_submit').on("click", function () {
+            var oEmptyModel = {
+                startDate: $("#start_date").val(),
+                endDate: $("#end_date").val()
+            };
+
+
+            $.ajax({
+                url: url_p + "/Report/CreateWeeklyReport",
+                type: "post",
+                data: oEmptyModel,
+                success: function (data, status) {
+                    //http://localhost:35936/Report?type=WeeklyReport
+                    alert(data);
+                    location = location;
+                }
+            });
+        });
+
+        $('#btn_close').on("click", function () {
+            $("#myModal").modal().on('hidden.bs.modal', function () {
+
+            });
+        });
+
+    </script>
+
+
+
+    <script type="text/javascript">
+        $('#weekdate').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+        $('#weekdate2').datetimepicker({
+            language: 'zh-CN',
+            weekStart: 1,
+            todayBtn: 1,
+            autoclose: 1,
+            todayHighlight: 1,
+            startView: 2,
+            minView: 2,
+            forceParse: 0
+        });
+
+        $('#monthdate').datetimepicker({
+            format: 'yyyy-mm',
+            weekStart: 1,
+            autoclose: true,
+            startView: 3,
+            minView: 3,
+            forceParse: false,
+            language: 'zh-CN'
+        });
+    </script>

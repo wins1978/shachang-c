@@ -1,0 +1,657 @@
+﻿<script type="text/javascript" src="~/js/bootstrap3-typeahead.min.js"></script>
+<!--http://silviomoreto.github.io/bootstrap-select/-->
+<link rel="stylesheet" href="~/Scripts/bootstrap-select-1.12.4/css/bootstrap-select.min.css">
+<script type="text/javascript" src="~/Scripts/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-select-1.12.4/js/i18n/defaults-zh_CN.min.js"></script>
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-v2.css">
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-datetimepicker.min.css">
+<script src="~/js/datetime/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/js/datetime/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout-3.4.2.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.mapping-latest.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.bootstraptable.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.index.js"></script>
+<style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .nav li {
+        padding-top: 5px;
+    }
+
+    .sidebar-nav {
+        padding: 9px 0;
+    }
+
+    .leaderboard {
+        padding: 60px;
+        margin-bottom: 30px;
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+        .leaderboard h1 {
+            font-size: 40px;
+            margin-bottom: 5px;
+            line-height: 1;
+            letter-spacing: -1px;
+            color: #92B901;
+        }
+
+        .leaderboard p {
+            font-size: 18px;
+            font-weight: 200;
+            line-height: 27px;
+        }
+
+    .well {
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+    .nav .nav-header {
+        font-size: 18px;
+        color: #92B901;
+    }
+
+    .fade {
+        opacity: 0;
+        -webkit-transition: opacity .15s linear;
+        -o-transition: opacity .15s linear;
+        transition: opacity .15s linear;
+    }
+
+        .fade.in {
+            opacity: 1;
+        }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .modal.fade .modal-dialog {
+        -webkit-transition: -webkit-transform .3s ease-out;
+        -o-transition: -o-transform .3s ease-out;
+        transition: transform .3s ease-out;
+        -webkit-transform: translate(0, -25%);
+        -ms-transform: translate(0, -25%);
+        -o-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+    }
+
+    .modal.in .modal-dialog {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+    }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 10px;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #999;
+        border: 1px solid rgba(0, 0, 0, .2);
+        border-radius: 6px;
+        outline: 0;
+        -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1040;
+        background-color: #000;
+    }
+
+        .modal-backdrop.fade {
+            filter: alpha(opacity=0);
+            opacity: 0;
+        }
+
+        .modal-backdrop.in {
+            filter: alpha(opacity=50);
+            opacity: .5;
+        }
+
+    .modal-header {
+        min-height: 16.42857143px;
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+        .modal-header .close {
+            margin-top: -2px;
+        }
+
+    .modal-title {
+        margin: 0;
+        line-height: 1.42857143;
+    }
+
+    .modal-body {
+        position: relative;
+        padding: 15px;
+    }
+
+    .modal-footer {
+        padding: 15px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+
+        .modal-footer .btn + .btn {
+            margin-bottom: 0;
+            margin-left: 5px;
+        }
+
+        .modal-footer .btn-group .btn + .btn {
+            margin-left: -1px;
+        }
+
+        .modal-footer .btn-block + .btn-block {
+            margin-left: 0;
+        }
+
+    .modal-scrollbar-measure {
+        position: absolute;
+        top: -9999px;
+        width: 50px;
+        height: 50px;
+        overflow: scroll;
+    }
+
+    .col-center-block {
+        float: none;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!-- Le fav and touch icons -->
+<div style="width:1140px;" class="col-center-block">
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span2">
+                <div class="well sidebar-nav">
+                    <ul class="nav nav-list" id="list-unstyled">
+                        <li class="nav-header">报表下载</li>
+                        <li>
+                            @Html.ActionLink("微信日报", "Index", "Report")
+                        </li>
+                        <li>
+                            @Html.ActionLink("客户日报", "Index", "Report", new { type = "CustomDailyReport" }, null)
+                        </li>
+                        <li>
+                            @Html.ActionLink("周报表", "Index", "Report", new { type = "WeeklyReport" },null)
+                        </li>
+                        <li>
+                            @Html.ActionLink("月出库核算表", "Index", "Report", new { type = "MonthlyReport" }, null)
+                        </li>
+                        <li class="active">
+                            @Html.ActionLink("自定义报表", "Index", new { type = "CustomReport" })
+                        </li>
+                    </ul>
+                </div><!--/.well -->
+            </div><!--/span-->
+            <div class="span10">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="errorBlock" style="color:#a94442;background-color:#f2dede;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px; display:none;">
+                            <strong>提示：</strong>
+                            <span id="errorSpan"></span>
+                        </div>
+                        <form class="form-inline" role="form">
+                            <div class="form-group col-lg-4">
+                                <label>客户名称</label><span style="color:red">*</span>
+                                <div id="divVendorContainer">
+                                    <select id='ddlVendors' class="form-control selectpicker" data-actions-box="true" multiple></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group  col-lg-4">
+                                <label>车牌号</label>
+                                <div id="ddlNumberFlagContainer">
+                                    <select id='ddlNumberFlag' class="form-control selectpicker" data-actions-box="true" multiple></select>
+                                </div>
+                            </div>
+
+                            <div class="form-group col-lg-4">
+                                <label>石料类型</label>
+                                <div id="divGoodsContainer">
+                                    <select id='ddlGoods' class="form-control selectpicker" data-actions-box="true" multiple></select>
+                                </div>
+                            </div>
+
+                            <div class="control-group  col-lg-4">
+                                <label class="control-label">开始日期</label><span style="color:red">*</span>
+                                <div class="controls input-append date form_date" style="height:30px" data-date="" data-date-format="yyyy-mm-dd" data-link-field="start_date" data-link-format="yyyy-mm-dd">
+                                    <input size="24" style="height:26px" type="text" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="start_date" value="" /><br />
+                            </div>
+
+                            <div class="control-group col-lg-4">
+                                <label class="control-label">结束日期</label><span style="color:red">*</span>
+                                <div class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="end_date" data-link-format="yyyy-mm-dd">
+                                    <input size="16" type="text" style="height:26px" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="end_date" value="" /><br />
+                            </div>
+                            <div class="form-group col-lg-4">
+                                <label class="control-label">查询类型</label>
+                                <div>
+                                    <label class="radio-inline">
+                                        <input name="search_type" type="radio" value="shop_number" checked>按型号
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input name="search_type" type="radio" value="car_number">按车牌
+                                    </label>
+                                    <label class="radio-inline">
+                                        <input name="search_type" type="radio" value="car_shop">按车牌型号
+                                    </label>
+                                </div>
+                            </div>
+                            <hr />
+                            <div class="control-group col-lg-12 pull-right">
+                                <button type="button" id="btnSearch" class="btn btn-primary" data-dismiss="modal"><span class="navbar-search" aria-hidden="true"></span>搜索</button>
+                                <button type="button" id="btnExport" class="btn btn-primary" data-dismiss="modal"><span class="navbar-search" aria-hidden="true"></span>导出报表</button>
+                                <button type="button" id="btnAllExport" class="btn btn-primary" data-dismiss="modal"><span class="navbar-search" aria-hidden="true"></span>导出所有客户明细</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="panel-heading col-lg-12" id="divSearchResult">
+                        <table id="tb_dept" class="col-lg-12" data-bind="myBootstrapTable:$root">
+                            <thead>
+                                <tr>
+                                    <th data-field="TAKE_DEPT">客户名称</th>
+                                    <th data-field="GROUP_NAME">石料类型</th>
+                                    <th data-field="SHOP_NUMBER">石料名称</th>
+                                    <th data-field="CAR_NUMBER">车牌号码</th>
+                                    <th data-field="CarCount">车数</th>
+                                    <th data-field="UNIT_PRICE">均价</th>
+                                    <th data-field="TotalNetWeight">总价</th>
+                                </tr>
+                            </thead>
+                        </table>
+                    </div>
+               
+
+            
+            
+            </div>
+        </div>
+    </div><!--/.fluid-container-->
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    var cloneNode = null;
+    var idx = 1;
+    var oldTableId = "tb_dept1";
+    var previosVendors = "";
+
+    $(function () {
+        //$("#divSearchResult").empty();
+        $.ajax({
+            // get请求地址
+            url: url_p + "/CustomReport/GetGoods",
+            dataType: "json",
+            success: function (data) {
+                var optArr = [];
+                for (var i = 0; i < data.length; i++) {
+                    $('#ddlGoods').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                }
+
+                $("#ddlGoods").selectpicker({
+                    noneSelectedText: '请选择'//默认显示内容
+                });
+                // 缺一不可
+                $('#ddlGoods').selectpicker('refresh');
+                $('#ddlGoods').selectpicker('render');
+
+            }
+        });
+        $.ajax({
+            // get请求地址
+            url: url_p + "/CustomReport/GetVendor",
+            dataType: "json",
+            success: function (data) {
+                var optArr = [];
+                for (var i = 0; i < data.length; i++) {
+                    $('#ddlVendors').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                }
+
+                $("#ddlVendors").selectpicker({
+                    noneSelectedText: '请选择'//默认显示内容
+                });
+                // 缺一不可
+                $('#ddlVendors').selectpicker('refresh');
+                $('#ddlVendors').selectpicker('render');
+
+            }
+        });
+
+        //$('#ddlVendors').on('change', function () {
+        //    var selected = $('#ddlVendors option:selected').val();
+        //    alert(selected);
+        //});
+
+        $('#ddlVendors').on('hidden.bs.select', function () {
+            var selected = $("#ddlVendors").selectpicker('val');
+            if (selected != null && selected != "") {
+                //previosVendors
+                var s = JSON.stringify(selected);
+                if (s != previosVendors) {
+                    previosVendors = s;
+                    getNumberFlag(selected);
+                }
+            }
+        })
+
+    });
+
+    $("#divGoodsContainer").mousedown(function () {
+        var div1 = $("#divGoodsContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+
+    $("#divVendorContainer").mousedown(function () {
+        var div1 = $("#divVendorContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+    $("#ddlNumberFlagContainer").mousedown(function () {
+        var div1 = $("#ddlNumberFlagContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+
+    //$("#txtVendorName").typeahead({
+    //    minLength: 0,//键入字数多少开始补全
+    //    showHintOnFocus: "true",//将显示所有匹配项
+    //    fitToElement: true,//选项框宽度与输入框一致
+    //    items: "all",//提示数量上限
+    //    afterSelect: function (item) {
+    //        getNumberFlag(item);
+    //    },
+    //    delay: 200,//延迟时间
+    //    source: function (query, process) {
+    //        return $.ajax({
+    //            url: url_p + "/CustomReport/GetVendor",
+    //            type: 'get',
+    //            success: function (result) {
+    //                return process(result);
+    //            }
+    //        });
+    //    }
+    //});
+
+    $('#btnExport').on("click", function () {
+        $("#errorBlock").hide();
+        var carNumberList = $("#ddlNumberFlag").selectpicker('val');
+        var shopNumberList = $("#ddlGoods").selectpicker('val');
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+        var searchType = $("input[name='search_type']:checked").val();
+
+        var vendorNameList = $("#ddlVendors").selectpicker('val');
+        if (vendorNameList == null || vendorNameList == "") {
+            $("#errorSpan").html("客户不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+
+        
+        if (startDate == null || startDate == "") {
+            $("#errorSpan").html("开始时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (endDate == null || endDate == "") {
+            $("#errorSpan").html("结束时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+
+        var searchModel = {
+            VendorNameList: vendorNameList,
+            CarNumberList: carNumberList,
+            StartDate: startDate,
+            EndDate: endDate,
+            ShopNumberList: shopNumberList,
+            SearchType: searchType
+        }
+
+        $.ajax({
+            url: url_p + "/CustomReport/Export",
+            type: "post",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'csp': searchModel }),
+            //data: searchModel,
+            success: function (data, status) {
+                location = data;
+            },
+            error: function (data, status) {
+                alert(data);
+            }
+        });
+    });
+
+    $('#btnAllExport').on("click", function () {
+        $("#errorBlock").hide();
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+
+        if (startDate == null || startDate == "") {
+            $("#errorSpan").html("开始时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (endDate == null || endDate == "") {
+            $("#errorSpan").html("结束时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+
+        var searchModel = {
+            VendorNameList: "",
+            CarNumberList: "",
+            StartDate: startDate,
+            EndDate: endDate,
+            ShopNumberList: "",
+            SearchType: ""
+        }
+
+        $.ajax({
+            url: url_p + "/CustomReport/AllExport",
+            type: "post",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'csp': searchModel }),
+            //data: searchModel,
+            success: function (data, status) {
+                location = data;
+            },
+            error: function (data, status) {
+                alert(data);
+            }
+        });
+    });
+
+    $('#btnSearch').on("click", function () {
+        $("#errorBlock").hide();
+        var carNumberList = $("#ddlNumberFlag").selectpicker('val');
+        var shopNumberList = $("#ddlGoods").selectpicker('val');
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+        var searchType = $("input[name='search_type']:checked").val();
+
+        var vendorName = $("#ddlVendors").selectpicker('val');
+        if (vendorName == null || vendorName == "") {
+            $("#errorSpan").html("客户不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (startDate == null || startDate == "") {
+            $("#errorSpan").html("开始时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (endDate == null || endDate == "") {
+            $("#errorSpan").html("结束时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+
+        var vendorNameStr = JSON.stringify(vendorName);
+
+        var carNumberStr = "";
+        if (carNumberList != null) {
+            carNumberStr = carNumberList.join('|');
+        }
+        var shopNumberStr = "";
+        if (shopNumberList != null) {
+            shopNumberStr = shopNumberList.join('|');
+        }
+
+
+        var tableInit = {
+            Init: function () {
+                if ($("#" + oldTableId).length == 1) {
+                    ko.cleanNode(document.getElementById(oldTableId));
+                }
+                var html = "<table class='col-lg-12' id='tb_dept" + idx.toString() + "' data-bind='myBootstrapTable:$root'>";
+                html += "<thead>";
+                html += "<tr>";
+                html += "<th data-field='TAKE_DEPT'>客户名称</th>";
+                html += "<th data-field='GROUP_NAME'>石料类型</th>";
+                html += "<th data-field='SHOP_NUMBER'>石料名称</th>";
+                html += "<th data-field='CAR_NUMBER'>车牌号码</th>";
+                html += "<th data-field='CarCount'>车数</th>";
+                html += "<th data-field='TotalNetWeight'>净重(吨)</th>";
+                html += "<th data-field='UNIT_PRICE'>均价(吨)</th>";
+                html += "<th data-field='TotalPrice'>总价</th>";
+                html += "</tr>";
+                html += "</thead>";
+                html += "</table>";
+
+                $("#divSearchResult").empty();
+                $("#divSearchResult").html(html);
+                var tableId = "tb_dept" + idx;
+
+                oldTableId = tableId;
+
+                this.myViewModel = new ko.bootstrapTableViewModel({
+                    url: url_p + '/CustomReport/Search',         //请求后台的URL（*）
+                    method: 'get',                      //请求方式（*）
+                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                    queryParams: function (param) {
+                        return {
+                            limit: param.limit,
+                            offset: param.offset,
+                            VendorNameStr: vendorNameStr,
+                            CarNumberList: carNumberStr,
+                            StartDate: startDate,
+                            EndDate: endDate,
+                            ShopNumberList: shopNumberStr,
+                            SearchType: searchType
+                        };
+                    },//传递参数（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                      //初始化加载第一页，默认第一页
+                    pageSize: 20,                //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100]        //可供选择的每页的行数（*）
+                });
+
+                ko.applyBindings(this.myViewModel, document.getElementById(tableId));
+                idx++;
+            }
+        };
+        tableInit.Init();
+
+    });
+
+    function getNumberFlag(vendor) {
+        $.ajax({
+            // get请求地址
+            url: url_p + "/CustomReport/GetNumberFlag",
+            dataType: "json",
+            data: { vendors: JSON.stringify(vendor) },
+            success: function (data) {
+                var optArr = [];
+                $('#ddlNumberFlag').empty();
+                for (var i = 0; i < data.length; i++) {
+                    $('#ddlNumberFlag').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                }
+
+                $("#ddlNumberFlag").selectpicker({
+                    noneSelectedText: '请选择'//默认显示内容
+                });
+                // 缺一不可
+                $('#ddlNumberFlag').selectpicker('refresh');
+                $('#ddlNumberFlag').selectpicker('render');
+
+            }
+        });
+    }
+
+
+</script>
+
+<script type="text/javascript">
+    $('.form_date').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+</script>

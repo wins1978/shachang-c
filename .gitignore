@@ -1,0 +1,5 @@
+/ExeWeb/Web.config
+/ExcelWeb/Bootstrap_FileUpload/Web.config
+/ExcelWeb/Bootstrap_FileUpload/Web.Debug.config
+/ExcelWeb/Bootstrap_FileUpload/Web.Release.config
+/ExcelWeb/Bootstrap_FileUpload/*.config

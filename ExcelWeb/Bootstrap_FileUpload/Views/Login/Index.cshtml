@@ -1,0 +1,123 @@
+﻿
+<div class="container body-content">
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="container">
+        <div class="form row" id="divLogin">
+            <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="login_form">
+                <h3 class="form-title">登录</h3>
+                @if(@ViewBag.Message== "注册成功")
+                {
+                <div id="successBlock" style="color:#a94442;background-color:#F0FFF0;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;">
+                    <strong>提示：</strong>
+                    <span id="successSpan">注册成功</span>
+                </div>
+                }
+                @if(@ViewBag.Message != "" && @ViewBag.Message != "注册成功")
+                {
+                <div style="color:#a94442;background-color:#f2dede;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px;">
+                    <strong>提示：</strong>
+                    <span>@ViewBag.Message</span>
+                </div>
+                }
+                <div class="col-sm-5 col-md-5">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="用户名" name="txtUserName" id="txtUserName" value="@ViewBag.LoginUserName" autofocus="autofocus" maxlength="40" />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock fa-lg"></i>
+                        <input class="form-control required" type="password" placeholder="密码" name="txtPassword" id="txtPassword" maxlength="16" />
+                    </div>
+                    <div class="form-group">
+                        <!--
+    <label class="checkbox">
+    <input type="checkbox" id="remember" name="remember" checked="checked" value="1" />记住用户
+    </label>-->
+                        <hr />
+                        <a href="javascript:;" id="register_btn" class="">注册</a>
+                    </div>
+                    <input type="hidden" id="loginHidden" name="loginHidden" value="" />
+                    <div class="form-group">
+                        <input type="submit" id="btnLogin" class="btn btn-success pull-right" value="登录 " />
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <div class="form row" style="display:none" id="divReg">
+            <form class="form-horizontal col-sm-offset-3 col-md-offset-3" id="register_form">
+                <h3 class="form-title">注册用户</h3>
+                <div id="errorBlock" style="color:#a94442;background-color:#f2dede;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px; display:none;">
+                    <strong>提示：</strong>
+                    <span id="errorSpan"></span>
+                </div>
+                <div class="col-sm-5 col-md-5">
+                    <div class="form-group">
+                        <i class="fa fa-user fa-lg"></i>
+                        <input class="form-control required" type="text" placeholder="用户名" name="username" id="username" autofocus="autofocus" />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-lock fa-lg"></i>
+                        <input class="form-control required" type="password" placeholder="密码" id="register_password" name="register_password" />
+                    </div>
+                    <div class="form-group">
+                        <i class="fa fa-check fa-lg"></i>
+                        <input class="form-control required" type="password" placeholder="确认密码" name="rpassword" id="rpassword" />
+                    </div>
+                    <input type="hidden" id="txtRegHidden" name="txtRegHidden" value="" />
+                    <div class="form-group">
+                        <input type="submit" class="btn btn-success pull-right" id="btnReg" value="注册" />
+                        <input type="submit" class="btn btn-info pull-left" id="back_btn" value="Back" />
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $('#register_btn').on("click", function () {
+        $("#divLogin").hide();
+        $("#divReg").show();
+    });
+
+    $('#btnLogin').on("click", function () {
+        $("#loginHidden").val("login");
+        $("#txtRegHidden").val("");
+    });
+
+
+
+
+    $('#btnReg').on("click", function () {
+        var pas1 = $("#register_password").val();
+        var pas2 = $("#rpassword").val();
+        var usrname = $("#username").val();
+
+        if (usrname == "") {
+            $("#errorSpan").html("用户名不能为空");
+            $("#errorBlock").show();
+            return false;
+        }
+        if (pas1 == "") {
+            $("#errorSpan").html("密码不能为空");
+            $("#errorBlock").show();
+            return false;
+        }
+        if (pas2 == "") {
+            $("#errorSpan").html("确认密码不能为空");
+            $("#errorBlock").show();
+            return false;
+        }
+        if (pas2 != pas1) {
+            $("#errorSpan").html("密码和确认密码不一致");
+            $("#errorBlock").show();
+            return false;
+        }
+
+        $("#loginHidden").val("");
+        $("#txtRegHidden").val("reg");
+    });
+</script>

@@ -1,0 +1,382 @@
+﻿<script type="text/javascript" src="~/Scripts/knockout-3.4.2.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.mapping-latest.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.bootstraptable.js"></script>
+<!--http://www.cnblogs.com/landeanfen/p/5400654.html-->
+<div class="container body-content">
+    <div class="panel panel-default">
+        <div class="panel-heading"></div>
+        <div class="panel-heading">供应商资料维护</div>
+        <div class="panel-heading">
+            <div id="toolbar" class="btn-group">
+                <!--
+                <button id="btn_add" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-plus" aria-hidden="true"></span>新增
+                </button>
+                    -->
+                <button id="btn_edit" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-pencil" aria-hidden="true"></span>新增修改
+                </button>
+                <span>&nbsp;&nbsp;</span>
+                <button id="btn_delete" type="button" class="btn btn-default">
+                    <span class="glyphicon glyphicon-remove" aria-hidden="true"></span>删除
+                </button>
+            </div>
+            <table id="tb_dept" data-bind="myBootstrapTable:$root">
+                <thead id="headers">
+                    <tr>
+                        <th data-checkbox="true"></th>
+                        <th data-field="VENDER">客户名称</th>
+                        <th data-field="GOODS_NAME">石料名称</th>
+                        <th data-field="UNIT_PRICE">单价(吨)</th>
+                        <th data-field="DATE_STR">更新日期</th>
+                    </tr>
+                </thead>
+            </table>
+        </div>
+    </div>
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    <h4 class="modal-title" id="myModalLabel">操作</h4>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="txt_VENDER">客户名称</label>
+                        <select id="ddlVENDER2">
+                            @foreach (var item in ViewBag.VendorList)
+                            {
+                                <option value="@item.ID">@item.VENDOR</option>
+                            }
+                        </select>
+                    </div>
+                    <div id="divcontainer">
+                        @foreach (var vList in ViewBag.VendorList)
+                        {
+                            <div class="form-group" name="divVendorContainerGroup" style="display:none" id='divVendorContainer@{@vList.ID}'>
+                                <label for="ddlGoodsName">石料名称</label>
+                                <div class="form-group">
+                                    @foreach (var gList in ViewBag.GoodsList)
+                                    {
+                                        <div class="row">
+                                            <label class="form-inline col-xs-2"><input name="txtGoodsNameV@{@vList.ID}" disabled="disabled" type="text" style="width:80px;" attrv="txtGoodsNameN@{@vList.ID}_@{@gList.ID}" value="@gList.GOODS_NAME"></label>
+                                            @{
+                                                var item = "";
+                                                foreach (var vgList in ViewBag.VenorGoodsList)
+                                                {
+                                                    if (vgList.GOODS_NAME == gList.GOODS_NAME && vgList.VENDER == vList.VENDOR)
+                                                    {
+                                                        item = vgList.UNIT_PRICE.ToString();
+                                                        break;
+                                                    }
+                                                }
+                                            }
+
+                                            <label class="form-inline"><input type="text" class="form-control col-xs-4 form-inline" id="VtxtGoodsNameN@{@vList.ID}_@{@gList.ID}" value="@item"></label>
+                                        </div>
+                                    }
+                                </div>
+                            </div>
+                        }
+                    </div>
+                    <div class="form-group" id="divGoodsName">
+                        <label for="ddlGoodsName">石料名称</label>
+                        <div class="form-group">
+                            @foreach (var item in ViewBag.GoodsList)
+                            {
+                                <div class="checkbox">
+                                    <label><input name="ddlGoodsName" type="checkbox" value="@item.GOODS_NAME">@item.GOODS_NAME</label>
+                                </div>
+                            }
+                        </div>
+                    </div>
+                    <!---------->
+                    <!---------->
+                    <div class="form-group">
+                        <input type="text" name="txt_UNIT_PRICE" data-bind="value:UNIT_PRICE" class="form-control" id="txt_UNIT_PRICE">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal"><span class="glyphicon glyphicon-remove" aria-hidden="true"></span>关闭</button>
+                    <button type="button" id="btn_submit" class="btn btn-primary" data-dismiss="modal"><span class="glyphicon glyphicon-floppy-disk" aria-hidden="true"></span>保存</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- 模态弹出窗内容 -->
+<div class="modal" id="y-myModalAdd" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">
+                    <span aria-hidden="true">×</span>
+                    <span class="sr-only">Close</span>
+                </button>
+                <h4 class="modal-title">提示</h4>
+            </div>
+            <div class="modal-body" id="showMsg">
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">确认</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $("#ddlVENDER2").change(function () {
+        $("div[name='divVendorContainerGroup']").hide();
+        var ss = $(this).children('option:selected').val();
+        if (action == "UPDATE") {
+            $("#divVendorContainer" + ss).show();
+        } else {
+            $("div[name='divVendorContainerGroup']").hide();
+        }
+    });
+
+    function showPrice() {
+        var vendorVal = $("#ddlVENDER2").val();
+        $("#divVendorContainer" + vendorVal).show();
+    }
+
+    function getPrices() {
+        var vendorVal = $("#ddlVENDER2").val();
+        var valueMap = "";
+        $("input[name='txtGoodsNameV" + vendorVal + "']").each(function () {
+            var this_id = $(this).attr("attrv");
+            var this_value = $(this).val();
+            var price = $("#V" + this_id).val();
+            var v1 = this_value + "|" + price;
+            valueMap += v1 + "|-|";
+        });
+
+        return valueMap;
+    };
+
+
+
+    $(function () {
+        //1、初始化表格
+        $("#divGoodsName").hide();
+        //vendorInit.Init();
+        //goodsInit.Init();
+        tableInit.Init();
+        //2、注册增删改事件
+        operate.operateInit();
+    });
+
+    var action = "ADD";
+    //初始化表格
+    var tableInit = {
+        Init: function () {
+            //绑定table的viewmodel
+            this.myViewModel = new ko.bootstrapTableViewModel({
+                url: url_p + '/VendorGoods/GetVendorGoods',         //请求后台的URL（*）
+                method: 'get',                      //请求方式（*）
+                toolbar: '#toolbar',                //工具按钮用哪个容器
+                queryParams: function (param) {
+                    return { limit: param.limit, offset: param.offset };
+                },//传递参数（*）
+                pagination: true,                   //是否显示分页（*）
+                sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                pageNumber: 1,                      //初始化加载第一页，默认第一页
+                pageSize: 100,                //每页的记录行数（*）
+                "export": {
+                    enabled: true,
+                    fileName: "Customer",
+                    allowExportSelectedData: true
+                },
+                pageList: [10, 25, 50, 100]        //可供选择的每页的行数（*）
+            });
+            ko.applyBindings(this.myViewModel, document.getElementById("tb_dept"));
+        }
+    };
+
+    //var vendorInit = {
+    //    Init: function () {
+    //        //绑定table的viewmodel
+    //        //初始化隐藏表单(客户)
+    //        var workOrderModel = {
+    //            VENDERLIST: ko.observableArray()
+    //        }
+    //        $.ajax({
+    //            type: "get",
+    //            async: false,
+    //            url: url_p +"/VendorGoods/GetVendors",
+    //            dataType: "json",
+    //            success: function (data) {
+    //                workOrderModel.VENDERLIST(data);
+    //            }
+    //        });
+    //        ko.applyBindings(workOrderModel, document.getElementById("txt_VENDER"));
+    //    }
+    //};
+
+    //var goodsInit = {
+    //    Init: function () {
+    //        var goodsModel = {
+    //            GOODSLIST: ko.observableArray()
+    //        }
+    //        $.ajax({
+    //            type: "get",
+    //            async: false,
+    //            url: url_p +"/VendorGoods/GetGoods",
+    //            dataType: "json",
+    //            success: function (data) {
+    //                goodsModel.GOODSLIST(data);
+    //            }
+    //        });
+    //        ko.applyBindings(goodsModel, document.getElementById("txt_GOODS_NAME"));
+    //    }
+    //};
+
+
+    //操作
+    var operate = {
+        //初始化按钮事件
+        operateInit: function () {
+            this.operateAdd();
+            this.operateUpdate();
+            this.operateDelete();
+            this.DepartmentModel = {
+                ID: ko.observable(),
+                VENDER: ko.observable(),
+                GOODS_NAME: ko.observable(),
+                UNIT_PRICE: ko.observable(),
+                DATE_STR: ko.observable()
+            };
+        },
+        //新增
+        operateAdd: function () {
+            $('#btn_add').on("click", function () {
+                $("#divGoodsName").show();
+                $("div[name='divVendorContainerGroup']").hide();
+                //$('#txt_VENDER').removeAttr("disabled");
+                $("#txt_UNIT_PRICE").show();
+                action = "ADD";
+                $("#myModal").modal().on("shown.bs.modal", function () {
+                    //ko.utils.extend(operate.DepartmentModel, oEmptyModel);
+                    //ko.applyBindings(operate.DepartmentModel, document.getElementById("myModal"));
+                    operate.operateSave();
+                }).on('hidden.bs.modal', function () {
+                    ko.cleanNode(document.getElementById("myModal"));
+                });
+            });
+        },
+        //编辑
+        operateUpdate: function () {
+            $('#btn_edit').on("click", function () {
+                var arrselectedData = tableInit.myViewModel.getSelections();
+                //if (!operate.operateCheck(arrselectedData)) { return; }
+                $("#divGoodsName").hide();
+                $("#txt_UNIT_PRICE").hide();
+                showPrice();
+                action = "UPDATE";
+                $("#ddlVENDER2").change(function () {
+                    $("div[name='divVendorContainerGroup']").hide();
+                    var ss = $(this).children('option:selected').val();
+                    if (action == "UPDATE") {
+                        $("#divVendorContainer" + ss).show();
+                    } else {
+                        $("div[name='divVendorContainerGroup']").hide();
+                    }
+                });
+                $("#myModal").modal().on("shown.bs.modal", function () {
+                    //$("#txt_VENDER").attr('value', arrselectedData[0].VENDER);
+                    //$("#txt_VENDER option[value='" + arrselectedData[0].VENDER + "']").attr("selected", "selected");
+
+                    //$("#txt_UNIT_PRICE").val(arrselectedData[0].UNIT_PRICE);
+                    //$("#txt_VENDER").attr("disabled", "true");
+                    //var vendorValue = $("#ddlVENDER2").val();
+                    //$("#divVendorContainer" + vendorValue).show();
+
+
+                    //将选中该行数据有数据Model通过Mapping组件转换为viewmodel
+                    ko.utils.extend(operate.DepartmentModel, ko.mapping.fromJS(arrselectedData[0]));
+                    //ko.applyBindings(operate.DepartmentModel, document.getElementById("myModal"));
+                    operate.operateSave();
+                    //$('#txt_VENDOR').removeAttr("readonly");
+                }).on('hidden.bs.modal', function () {
+                    //关闭弹出框的时候清除绑定(这个清空包括清空绑定和清空注册事件)
+                    ko.cleanNode(document.getElementById("myModal"));
+                });
+            });
+        },
+        //删除
+        operateDelete: function () {
+            $('#btn_delete').on("click", function () {
+                var arrselectedData = tableInit.myViewModel.getSelections();
+                $.ajax({
+                    url: url_p + "/VendorGoods/Delete",
+                    type: "post",
+                    contentType: 'application/json',
+                    data: JSON.stringify(arrselectedData),
+                    success: function (data, status) {
+                        //var $modal = $('#y-myModalAdd');
+                        //$modal.modal({ backdrop: 'static' });
+                        //$("#showMsg").html(data);
+                        alert(data);
+                        //tableInit.myViewModel.refresh();
+                        location = location;
+                    }
+                });
+            });
+        },
+        //保存数据
+        operateSave: function () {
+            $('#btn_submit').on("click", function () {
+                //取到当前的viewmodel$
+                var oViewModel = operate.DepartmentModel;
+                var vendorText = $("#ddlVENDER2").find("option:selected").text();
+                operate.DepartmentModel.VENDER(vendorText);
+                operate.DepartmentModel.UNIT_PRICE($("#txt_UNIT_PRICE").val());
+                //将Viewmodel转换为数据model
+
+                var ddl_goods_name = $("input:checkbox[name='ddlGoodsName']:checked").map(function (index, elem) {
+                    return $(elem).val();
+                }).get().join('|');
+
+                var goodsPrices = getPrices();
+
+
+                var oDataModel = ko.toJS(oViewModel);
+                var funcName = action;// oDataModel.ID ? "Update" : "Add";
+
+                var parmModel = {
+                    VendorGoods: oDataModel,
+                    GoodsNameStr: ddl_goods_name,
+                    GoodsPriceStr: goodsPrices
+                }
+
+                $.ajax({
+                    url: url_p + "/VendorGoods/" + funcName,
+                    type: "post",
+                    data: parmModel,
+                    success: function (data, status) {
+                        //var $modal = $('#y-myModalAdd');
+                        //$modal.modal({ backdrop: 'static' });
+                        //$("#showMsg").html(data);
+                        alert(data);
+                        location = location;
+                        //tableInit.myViewModel.refresh();
+                    }
+                });
+            });
+        },
+        //数据校验
+        operateCheck: function (arr) {
+            if (arr.length <= 0) {
+                alert("请至少选择一行数据");
+                return false;
+            }
+            if (arr.length > 1) {
+                alert("只能编辑一行数据");
+                return false;
+            }
+            return true;
+        }
+    }
+</script>

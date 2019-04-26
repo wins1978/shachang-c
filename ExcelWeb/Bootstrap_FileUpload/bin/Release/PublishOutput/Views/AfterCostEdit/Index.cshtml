@@ -1,0 +1,484 @@
+﻿<script type="text/javascript" src="~/js/bootstrap3-typeahead.min.js"></script>
+<!--http://silviomoreto.github.io/bootstrap-select/-->
+<link rel="stylesheet" href="~/Scripts/bootstrap-select-1.12.4/css/bootstrap-select.min.css">
+<script type="text/javascript" src="~/Scripts/bootstrap-select-1.12.4/js/bootstrap-select.min.js"></script>
+<script type="text/javascript" src="~/Scripts/bootstrap-select-1.12.4/js/i18n/defaults-zh_CN.min.js"></script>
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-v2.css">
+<link rel="stylesheet" href="~/js/datetime/css/bootstrap-datetimepicker.min.css">
+<script src="~/js/datetime/js/bootstrap-datetimepicker.min.js"></script>
+<script src="~/js/datetime/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout-3.4.2.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.mapping-latest.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.bootstraptable.js"></script>
+<script type="text/javascript" src="~/Scripts/knockout.index.js"></script>
+<style type="text/css">
+    body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+    }
+
+    .nav li {
+        padding-top: 5px;
+    }
+
+    .sidebar-nav {
+        padding: 9px 0;
+    }
+
+    .leaderboard {
+        padding: 60px;
+        margin-bottom: 30px;
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+        .leaderboard h1 {
+            font-size: 40px;
+            margin-bottom: 5px;
+            line-height: 1;
+            letter-spacing: -1px;
+            color: #92B901;
+        }
+
+        .leaderboard p {
+            font-size: 18px;
+            font-weight: 200;
+            line-height: 27px;
+        }
+
+    .well {
+        background-image: url('/twitter-bootstrap/images/gridbg.gif');
+        background-repeat: repeat;
+        -webkit-border-radius: 6px;
+        -moz-border-radius: 6px;
+        border-radius: 6px;
+    }
+
+    .nav .nav-header {
+        font-size: 18px;
+        color: #92B901;
+    }
+
+    .fade {
+        opacity: 0;
+        -webkit-transition: opacity .15s linear;
+        -o-transition: opacity .15s linear;
+        transition: opacity .15s linear;
+    }
+
+        .fade.in {
+            opacity: 1;
+        }
+
+    .modal-open {
+        overflow: hidden;
+    }
+
+    .modal.fade .modal-dialog {
+        -webkit-transition: -webkit-transform .3s ease-out;
+        -o-transition: -o-transform .3s ease-out;
+        transition: transform .3s ease-out;
+        -webkit-transform: translate(0, -25%);
+        -ms-transform: translate(0, -25%);
+        -o-transform: translate(0, -25%);
+        transform: translate(0, -25%);
+    }
+
+    .modal.in .modal-dialog {
+        -webkit-transform: translate(0, 0);
+        -ms-transform: translate(0, 0);
+        -o-transform: translate(0, 0);
+        transform: translate(0, 0);
+    }
+
+    .modal-open .modal {
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
+
+    .modal-dialog {
+        position: relative;
+        width: auto;
+        margin: 10px;
+    }
+
+    .modal-content {
+        position: relative;
+        background-color: #fff;
+        -webkit-background-clip: padding-box;
+        background-clip: padding-box;
+        border: 1px solid #999;
+        border: 1px solid rgba(0, 0, 0, .2);
+        border-radius: 6px;
+        outline: 0;
+        -webkit-box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+        box-shadow: 0 3px 9px rgba(0, 0, 0, .5);
+    }
+
+    .modal-backdrop {
+        position: fixed;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        z-index: 1040;
+        background-color: #000;
+    }
+
+        .modal-backdrop.fade {
+            filter: alpha(opacity=0);
+            opacity: 0;
+        }
+
+        .modal-backdrop.in {
+            filter: alpha(opacity=50);
+            opacity: .5;
+        }
+
+    .modal-header {
+        min-height: 16.42857143px;
+        padding: 15px;
+        border-bottom: 1px solid #e5e5e5;
+    }
+
+        .modal-header .close {
+            margin-top: -2px;
+        }
+
+    .modal-title {
+        margin: 0;
+        line-height: 1.42857143;
+    }
+
+    .modal-body {
+        position: relative;
+        padding: 15px;
+    }
+
+    .modal-footer {
+        padding: 15px;
+        text-align: right;
+        border-top: 1px solid #e5e5e5;
+    }
+
+        .modal-footer .btn + .btn {
+            margin-bottom: 0;
+            margin-left: 5px;
+        }
+
+        .modal-footer .btn-group .btn + .btn {
+            margin-left: -1px;
+        }
+
+        .modal-footer .btn-block + .btn-block {
+            margin-left: 0;
+        }
+
+    .modal-scrollbar-measure {
+        position: absolute;
+        top: -9999px;
+        width: 50px;
+        height: 50px;
+        overflow: scroll;
+    }
+
+    .col-center-block {
+        float: none;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+</style>
+<!-- Le HTML5 shim, for IE6-8 support of HTML5 elements -->
+<!--[if lt IE 9]>
+  <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+<![endif]-->
+<!-- Le fav and touch icons -->
+<div style="width:1140px;" class="col-center-block">
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="panel-heading"></div>
+    <div class="container-fluid">
+        <div class="row-fluid">
+            <div class="span10">
+                <div class="panel panel-default">
+                    <div class="panel-body">
+                        <div id="errorBlock" style="color:#a94442;background-color:#f2dede;border-color:#ebccd1;padding: 15px;margin-bottom: 20px;border: 1px solid transparent;border-radius: 4px; display:none;">
+                            <strong>提示：</strong>
+                            <span id="errorSpan"></span>
+                        </div>
+                        <form class="form-inline" role="form">
+                            <div class="form-group col-lg-4">
+                                <label>客户名称</label><span style="color:red">*</span>
+                                <div id="divVendorContainer">
+                                    <select id='ddlVendors' class="form-control selectpicker" data-actions-box="true" multiple></select>
+                                </div>
+                            </div>
+                            <div class="control-group  col-lg-4">
+                                <label class="control-label">开始日期</label><span style="color:red">*</span>
+                                <div class="controls input-append date form_date" style="height:30px" data-date="" data-date-format="yyyy-mm-dd" data-link-field="start_date" data-link-format="yyyy-mm-dd">
+                                    <input size="24" style="height:26px" type="text" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="start_date" value="" /><br />
+                            </div>
+
+                            <div class="control-group col-lg-4">
+                                <label class="control-label">结束日期</label><span style="color:red">*</span>
+                                <div class="controls input-append date form_date" data-date="" data-date-format="yyyy-mm-dd" data-link-field="end_date" data-link-format="yyyy-mm-dd">
+                                    <input size="16" type="text" style="height:26px" value="" readonly>
+                                    <span class="add-on" style="height:26px"><i class="icon-remove"></i></span>
+                                    <span class="add-on" style="height:26px"><i class="icon-th"></i></span>
+                                </div>
+                                <input type="hidden" id="end_date" value="" /><br />
+                            </div>
+                            <div class="control-group col-lg-4">
+                                <label for="txt_GOODS_TYPE">大类</label>
+                                <div id="divGoodsContainer">
+                                    <select id='ddlGoods' class="form-control selectpicker" data-actions-box="true" multiple></select>
+                                    </div>
+                                </div>
+                            <div class="control-group col-lg-4">
+                                <label>更新价格为：</label><span style="color:red">*</span>
+                                <input type="text" class="form-control" id="txtPrice">
+                            </div>
+                            <hr />
+                            <div class="control-group col-lg-12 pull-right">
+                                <button type="button" id="btnSearch" class="btn btn-primary" data-dismiss="modal"><span class="navbar-search" aria-hidden="true"></span>搜索</button>
+                                <button type="button" id="btnExport" class="btn btn-primary" data-dismiss="modal"><span class="navbar-search" aria-hidden="true"></span>更新价格</button>
+                            </div>
+                        </form>
+
+                    </div>
+                </div>
+                <div class="panel-heading col-lg-12" id="divSearchResult">
+                    <table id="tb_dept" class="col-lg-12" data-bind="myBootstrapTable:$root">
+                        <thead>
+                            <tr>
+                                <th data-checkbox="true"></th>
+                                <th data-field="Vendor">客户名称</th>
+                                <th data-field="DateStr">日期</th>
+                                <th data-field="ShopNumber">货架号</th>
+                                <th data-field="UnitPrice">单价</th>
+                            </tr>
+                        </thead>
+                    </table>
+                </div>
+
+
+
+
+            </div>
+        </div>
+    </div><!--/.fluid-container-->
+</div>
+
+
+
+
+
+<script type="text/javascript">
+    var cloneNode = null;
+    var idx = 1;
+    var oldTableId = "tb_dept1";
+    var previosVendors = "";
+    var tableInit = null;
+    $(function () {
+        $.ajax({
+            // get请求地址
+            url: url_p + "/AfterCostEdit/GetVendor",
+            dataType: "json",
+            success: function (data) {
+                var optArr = [];
+                for (var i = 0; i < data.length; i++) {
+                    $('#ddlVendors').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                }
+
+                $("#ddlVendors").selectpicker({
+                    noneSelectedText: '请选择'//默认显示内容
+                });
+                // 缺一不可
+                $('#ddlVendors').selectpicker('refresh');
+                $('#ddlVendors').selectpicker('render');
+
+            }
+        });
+
+        $.ajax({
+            // get请求地址
+            url: url_p + "/AfterCostEdit/GetGoods",
+            dataType: "json",
+            success: function (data) {
+                var optArr = [];
+                for (var i = 0; i < data.length; i++) {
+                    $('#ddlGoods').append("<option value=" + data[i].value + ">" + data[i].text + "</option>");
+                }
+
+                $("#ddlGoods").selectpicker({
+                    noneSelectedText: '请选择'//默认显示内容
+                });
+                // 缺一不可
+                $('#ddlGoods').selectpicker('refresh');
+                $('#ddlGoods').selectpicker('render');
+
+            }
+        });
+    });
+
+    $("#divGoodsContainer").mousedown(function () {
+        var div1 = $("#divGoodsContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+
+    $("#divVendorContainer").mousedown(function () {
+        var div1 = $("#divVendorContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+    $("#ddlNumberFlagContainer").mousedown(function () {
+        var div1 = $("#ddlNumberFlagContainer div").first();
+        div1.addClass("open");
+        $(".dropdown-menu").addClass("open");
+        //$(".dropdown-menu").attr("style","max-height: 573px; overflow: hidden; min-height: 130px;");
+    });
+
+
+    $('#btnExport').on("click", function () {
+        $("#errorBlock").hide();
+
+        if (tableInit == null) return;
+
+        var price = $("#txtPrice").val();
+        if (price == "") {
+            alert("价格不能为空");
+            return;
+        }
+
+        var arrselectedData = tableInit.myViewModel.getSelections();
+        if (arrselectedData.length < 1) {
+            alert("未选择行");
+            return;
+        }
+        //var arr = [];
+        //for (var i= 0; i < arrselectedData.length;i++){
+        //    var id = arrselectedData[i].ID;
+        //    arr.push(id);
+        //}
+
+
+        $.ajax({
+            url: url_p + "/AfterCostEdit/Export",
+            type: "post",
+            contentType: 'application/json; charset=utf-8',
+            data: JSON.stringify({ 'csp': arrselectedData, 'price': price }),
+            //data: searchModel,
+            success: function (data, status) {
+                alert(data);
+            },
+            error: function (data, status) {
+                alert(data);
+            }
+        });
+    });
+
+    $('#btnSearch').on("click", function () {
+        $("#errorBlock").hide();
+        var startDate = $("#start_date").val();
+        var endDate = $("#end_date").val();
+        var vendorName = $("#ddlVendors").selectpicker('val');
+        var goods = $("#ddlGoods").selectpicker('val');
+        if (vendorName == null || vendorName == "") {
+            $("#errorSpan").html("客户不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (startDate == null || startDate == "") {
+            $("#errorSpan").html("开始时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+        if (endDate == null || endDate == "") {
+            $("#errorSpan").html("结束时间不能为空");
+            $("#errorBlock").show();
+            return;
+        };
+
+        var vendorNameStr = JSON.stringify(vendorName);
+        var goodsStr = JSON.stringify(goods);
+
+        tableInit = {
+            Init: function () {
+                if ($("#" + oldTableId).length == 1) {
+                    ko.cleanNode(document.getElementById(oldTableId));
+                }
+                var html = "<table class='col-lg-12' id='tb_dept" + idx.toString() + "' data-bind='myBootstrapTable:$root'>";
+                html += "<thead>";
+                html += "<tr>";
+                html += " <th data-checkbox='true'></th>";
+                html += " <th data-field='Vendor'>客户名称</th>";
+                html += "<th data-field='DateStr'>日期</th>";
+                html += "<th data-field='ShopNumber'>货架号</th>";
+                html += "<th data-field='UnitPrice'>单价</th>";
+                
+                html += "</tr>";
+                html += "</thead>";
+                html += "</table>";
+
+                $("#divSearchResult").empty();
+                $("#divSearchResult").html(html);
+                var tableId = "tb_dept" + idx;
+
+                oldTableId = tableId;
+
+                this.myViewModel = new ko.bootstrapTableViewModel({
+                    url: url_p + '/AfterCostEdit/Search',         //请求后台的URL（*）
+                    method: 'get',                      //请求方式（*）
+                    toolbar: '#toolbar',                //工具按钮用哪个容器
+                    queryParams: function (param) {
+                        return {
+                            limit: param.limit,
+                            offset: param.offset,
+                            VendorNameStr: vendorNameStr,
+                            CarNumberList: '',
+                            StartDate: startDate,
+                            EndDate: endDate,
+                            ShopNumberList: goodsStr,
+                            SearchType: ''
+                        };
+                    },//传递参数（*）
+                    pagination: true,                   //是否显示分页（*）
+                    sidePagination: "server",           //分页方式：client客户端分页，server服务端分页（*）
+                    pageNumber: 1,                      //初始化加载第一页，默认第一页
+                    pageSize: 3000,                //每页的记录行数（*）
+                    pageList: [10, 25, 50, 100]        //可供选择的每页的行数（*）
+                });
+
+                ko.applyBindings(this.myViewModel, document.getElementById(tableId));
+                idx++;
+            }
+        };
+        tableInit.Init();
+
+    });
+
+</script>
+
+<script type="text/javascript">
+    $('.form_date').datetimepicker({
+        language: 'zh-CN',
+        weekStart: 1,
+        todayBtn: 1,
+        autoclose: 1,
+        todayHighlight: 1,
+        startView: 2,
+        minView: 2,
+        forceParse: 0
+    });
+</script>
