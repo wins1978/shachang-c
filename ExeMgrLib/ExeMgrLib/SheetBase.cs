@@ -30,6 +30,11 @@ namespace ExeMgrLib
             file.Close();
         }
 
+        protected void CloseIt()
+        {
+            hssfworkbook.Close();
+        }
+
         /// <summary>
         /// yyyyMMdd ==>yyyy-MM-dd
         /// </summary>

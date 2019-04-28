@@ -364,6 +364,7 @@ namespace ExeMgrLib
             sheet1.GetRow(0).GetCell(0).SetCellValue(date1 + "销售报表");
 
             //EXCEL_DAILY_SUMMARY
+            /*
             EXCEL_DAILY_SUMMARY ds = new EXCEL_DAILY_SUMMARY();
             ds.CASH = (decimal)curPrice;
             ds.DATE_STR = datestr;
@@ -384,13 +385,238 @@ namespace ExeMgrLib
                 }
                 db.InsertItem(ds);
             }
+            */
 
             //EXCEL_DAILY_DETAIL
-            InsertDailyDetail(dataViews, datestr,outFileName,guid,today);
+            //InsertDailyDetail(dataViews, datestr,outFileName,guid,today);
 
             WriteToFile("信日报"+date1);
 
+            Run2(fileFullPath, items);
             return status;
+        }
+
+
+        // 修正
+        public void Run2(string fileFullPath, List<InputInfo> items)
+        {
+            string status = "";
+            InitWorkbook(fileFullPath);
+            ISheet sheet1 = hssfworkbook.GetSheet("Sheet1");
+
+            string[] datestrArr = items.Select(o => o.Date).Distinct().ToArray();
+            string datestr = GetDateString(datestrArr);
+            string guid = Guid.NewGuid().ToString();
+            string date1 = datestr.Substring(0, 4) + "年" + datestr.Substring(4, 2) + "月" + datestr.Substring(6, 2) + "日";
+            string outFileName = "temp" + date1 + ".xls";
+            string date2 = datestr.Substring(0, 4) + "-" + datestr.Substring(4, 2) + "-" + datestr.Substring(6, 2);
+            DateTime today = DateTime.Parse(date2);
+            foreach (var item in items)
+            {
+                
+              item.GroupName = "机制砂";
+                
+            }
+
+            //获取包括价格在内的视图
+            List<EXCEL_IMPORT_DAILY_V3> dataViews = new List<EXCEL_IMPORT_DAILY_V3>();
+            using (var db = new OracleDataAccess())
+            {
+                dataViews = db.GetItems<EXCEL_IMPORT_DAILY_V3>(o => datestrArr.Contains(o.IMPORT_DATE_STR));
+            }
+            foreach (EXCEL_IMPORT_DAILY_V3 v in dataViews)
+            {
+                if (v.TAKE_DEPT.StartsWith("成协"))
+                {
+                    v.TAKE_DEPT = "成协";
+                    v.VG_VENDOR = "成协";
+                    v.V_VENDOR = "成协";
+                }
+            }
+
+            dataViews = dataViews.OrderBy(o => o.TAKE_DEPT).ToList();
+
+
+            foreach (InputInfo item in items)
+            {
+                if (item.TakeDept.StartsWith("成协"))
+                {
+                    item.TakeDept = "成协";
+                }
+            }
+
+            var dataSummary = (from a in items
+                               group a by new { a.TakeDept, a.ShopNumber } into b
+                               select new
+                               {
+                                   TakeDept = b.Key.TakeDept,
+                                   ShopNumber = b.Key.ShopNumber,
+                                   Count = b.Count(),
+                                   TotalNetWeight = b.Sum(c => Int32.Parse(c.NetWeight))
+                               });
+
+
+            var dataDetails = (from a in dataViews
+                               group a by new { a.VG_VENDOR, a.GROUP_NAME, a.UNIT_PRICE } into b
+                               select new
+                               {
+                                   TakeDept = b.Key.VG_VENDOR,
+                                   GroupName = b.Key.GROUP_NAME,
+                                   Count = b.Count(),
+                                   PRICE = b.Key.UNIT_PRICE.Value,
+                                   TotalNetWeight = b.Sum(c => Int32.Parse(c.NET_WEIGHT))
+                               });
+
+
+
+            int rowIndex = 9;
+            double totalprice = 0;
+            double curPrice = 0;//现金
+            double shiFeng = 0;//石粉（吨）
+            double shiZai = 0;//石仔
+            ICellStyle cs2 = sheet1.GetRow(8).GetCell(1).CellStyle;
+            foreach (var item in dataDetails)
+            {
+                sheet1.CreateRow(rowIndex);
+                sheet1.GetRow(rowIndex).CreateCell(0);
+                sheet1.GetRow(rowIndex).CreateCell(1);
+                sheet1.GetRow(rowIndex).CreateCell(2);
+                sheet1.GetRow(rowIndex).CreateCell(3);
+                sheet1.GetRow(rowIndex).CreateCell(4);
+                sheet1.GetRow(rowIndex).CreateCell(5);
+
+                sheet1.GetRow(rowIndex).GetCell(0).SetCellValue(item.TakeDept);
+                string cell1 = String.Format("{0}{1}车", item.GroupName, item.Count);
+                sheet1.GetRow(rowIndex).GetCell(1).SetCellValue(cell1);
+
+                double cell2 = Math.Round(item.TotalNetWeight / 1000d, 2);
+                sheet1.GetRow(rowIndex).GetCell(2).SetCellValue(cell2);
+
+                sheet1.GetRow(rowIndex).GetCell(0).CellStyle = cs2;
+                sheet1.GetRow(rowIndex).GetCell(1).CellStyle = cs2;
+                sheet1.GetRow(rowIndex).GetCell(2).CellStyle = cs2;
+                sheet1.GetRow(rowIndex).GetCell(3).CellStyle = cs2;
+                sheet1.GetRow(rowIndex).GetCell(4).CellStyle = cs2;
+                sheet1.GetRow(rowIndex).GetCell(5).CellStyle = cs2;
+
+                
+                 shiZai += cell2;
+                
+
+                double price = (double)item.PRICE;
+                sheet1.GetRow(rowIndex).GetCell(3).SetCellValue(price);
+
+                double total = price * cell2;
+                if (item.TakeDept == "零售")
+                {
+                    int total1 = GetMoneyRound(total);
+                    total = Double.Parse(total1.ToString());
+                    curPrice += total;
+
+                }
+                sheet1.GetRow(rowIndex).GetCell(4).SetCellValue(total);
+
+                totalprice += total;
+                rowIndex++;
+            }
+            sheet1.CreateRow(rowIndex);
+            sheet1.GetRow(rowIndex).CreateCell(0);
+            sheet1.GetRow(rowIndex).CreateCell(1);
+            sheet1.GetRow(rowIndex).CreateCell(2);
+            sheet1.GetRow(rowIndex).CreateCell(3);
+            sheet1.GetRow(rowIndex).CreateCell(4);
+            sheet1.GetRow(rowIndex).CreateCell(5);
+            sheet1.GetRow(rowIndex).GetCell(0).SetCellValue("合计:");
+            sheet1.GetRow(rowIndex).GetCell(4).SetCellValue(totalprice);
+
+
+            sheet1.GetRow(rowIndex).GetCell(0).CellStyle = cs2;
+            sheet1.GetRow(rowIndex).GetCell(1).CellStyle = cs2;
+            sheet1.GetRow(rowIndex).GetCell(2).CellStyle = cs2;
+            sheet1.GetRow(rowIndex).GetCell(3).CellStyle = cs2;
+            sheet1.GetRow(rowIndex).GetCell(4).CellStyle = cs2;
+            sheet1.GetRow(rowIndex).GetCell(5).CellStyle = cs2;
+
+            //营业收入：
+            sheet1.GetRow(1).GetCell(1).SetCellValue(totalprice);
+            //其中：现金
+            //int price1 = GetMoneyRound(curPrice);
+            sheet1.GetRow(2).GetCell(1).SetCellValue(curPrice);
+            //挂账
+            sheet1.GetRow(3).GetCell(1).SetCellValue(totalprice - curPrice);
+            //石仔
+            sheet1.GetRow(4).GetCell(1).SetCellValue(shiZai);
+            //石粉
+            sheet1.GetRow(5).GetCell(1).SetCellValue(shiFeng);
+            //型号0--5
+            int type05car = 0;//型号05车
+            int type12car = 0;//型号12车
+            int type13car = 0;//型号13车
+            int type24car = 0;//型号14车
+            int typeshiPotouCar = 0;//头破石车数
+            double type05w = 0;//型号05重
+            double type12w = 0;//型号12重
+            double type13w = 0;//型号13重
+            double type24w = 0;//型号14重
+            double typeshiPotouCarW = 0;//头破石重
+
+
+            type05car = dataSummary.Where(o => o.ShopNumber == "0-5").Sum(o => o.Count);
+            type12car = dataSummary.Where(o => o.ShopNumber == "成品砂").Sum(o => o.Count);
+            type13car = dataSummary.Where(o => o.ShopNumber == "其他").Sum(o => o.Count);
+            type24car = dataSummary.Where(o => o.ShopNumber == "2-4").Sum(o => o.Count);
+            typeshiPotouCar = dataSummary.Where(o => o.ShopNumber == "头破石").Sum(o => o.Count);
+            sheet1.GetRow(2).GetCell(3).SetCellValue(type05car);
+            sheet1.GetRow(3).GetCell(3).SetCellValue(type12car);
+            sheet1.GetRow(4).GetCell(3).SetCellValue(type13car);
+            sheet1.GetRow(5).GetCell(3).SetCellValue(type24car);
+            sheet1.GetRow(6).GetCell(3).SetCellValue(typeshiPotouCar);
+
+            type05w = dataSummary.Where(o => o.ShopNumber == "0-5").Sum(o => o.TotalNetWeight);
+            type12w = dataSummary.Where(o => o.ShopNumber == "成品砂").Sum(o => o.TotalNetWeight);
+            type13w = dataSummary.Where(o => o.ShopNumber == "其他").Sum(o => o.TotalNetWeight);
+            type24w = dataSummary.Where(o => o.ShopNumber == "2-4").Sum(o => o.TotalNetWeight);
+            typeshiPotouCarW = dataSummary.Where(o => o.ShopNumber == "头破石").Sum(o => o.TotalNetWeight);
+
+            type05w = Math.Round(type05w / 1000d, 2);
+            type12w = Math.Round(type12w / 1000d, 2);
+            type13w = Math.Round(type13w / 1000d, 2);
+            type24w = Math.Round(type24w / 1000d, 2);
+            typeshiPotouCarW = Math.Round(typeshiPotouCarW / 1000d, 2);
+            sheet1.GetRow(2).GetCell(4).SetCellValue(type05w);
+            sheet1.GetRow(3).GetCell(4).SetCellValue(type12w);
+            sheet1.GetRow(4).GetCell(4).SetCellValue(type13w);
+            sheet1.GetRow(5).GetCell(4).SetCellValue(type24w);
+            sheet1.GetRow(6).GetCell(4).SetCellValue(typeshiPotouCarW);
+
+            sheet1.GetRow(0).GetCell(0).SetCellValue(date1 + "销售报表");
+
+            //EXCEL_DAILY_SUMMARY
+            EXCEL_DAILY_SUMMARY ds = new EXCEL_DAILY_SUMMARY();
+            ds.CASH = (decimal)curPrice;
+            ds.DATE_STR = datestr;
+            ds.DEBT = (decimal)totalprice - (decimal)curPrice;
+            ds.FILE_NAME = outFileName;
+            ds.GUID_KEY = guid;
+            ds.REPORT_DATE = today;
+            ds.SHIFENG_W = (decimal)shiFeng;
+            ds.SHIZAI_W = (decimal)shiZai;
+            ds.TOTAL_INCOME = (decimal)totalprice;
+
+            using (var db = new OracleDataAccess())
+            {
+                var oldItem = db.GetItems<EXCEL_DAILY_SUMMARY>(o => o.DATE_STR == datestr);
+                if (oldItem != null && oldItem.Count > 0)
+                {
+                    db.DeleteItems(oldItem);
+                }
+                db.InsertItem(ds);
+            }
+
+            //EXCEL_DAILY_DETAIL
+            InsertDailyDetail(dataViews, datestr, outFileName, guid, today);
+
+            CloseIt();
         }
 
         void InsertDailyDetail(List<EXCEL_IMPORT_DAILY_V3> dataViews,string datestr,string filename,string guid,DateTime today)
