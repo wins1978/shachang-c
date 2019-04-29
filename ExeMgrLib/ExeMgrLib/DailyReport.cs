@@ -408,7 +408,7 @@ namespace ExeMgrLib
             string datestr = GetDateString(datestrArr);
             string guid = Guid.NewGuid().ToString();
             string date1 = datestr.Substring(0, 4) + "年" + datestr.Substring(4, 2) + "月" + datestr.Substring(6, 2) + "日";
-            string outFileName = "temp" + date1 + ".xls";
+            string outFileName = "信日报" + date1 + ".xls";
             string date2 = datestr.Substring(0, 4) + "-" + datestr.Substring(4, 2) + "-" + datestr.Substring(6, 2);
             DateTime today = DateTime.Parse(date2);
             foreach (var item in items)
